@@ -1,5 +1,16 @@
 [
-  { "model": "Personne", "data": { "nom": "John Doe" } },
+  { 
+    "model": "Personne", 
+    "data": { 
+      "nom": "John Doe" 
+    } 
+  },
+  {
+    "model": "Personne",
+    "data": {
+      "nom": "Jane Smith"
+    }
+  },
   {
     "model": "Patrimoine",
     "data": {
@@ -8,58 +19,54 @@
         {
           "possesseur": { "nom": "John Doe" },
           "libelle": "MacBook Pro",
-          "valeur": 4000000,
+          "valeur": 4500000,  
           "dateDebut": "2023-12-25T00:00:00.000Z",
-          "dateFin": null,
-          "tauxAmortissement": 5
+          "dateFin": "2025-12-25T00:00:00.000Z",  
+          "tauxAmortissement": 5  
         },
         {
           "possesseur": { "nom": "John Doe" },
           "libelle": "Alternance",
           "valeur": 0,
           "dateDebut": "2022-12-31T21:00:00.000Z",
-          "dateFin": null,
-          "tauxAmortissement": null,
+          "dateFin": null,  
+          "tauxAmortissement": null,  
           "jour": 1,
-          "valeurConstante": 500000
+          "valeurConstante": 550000  
         },
         {
           "possesseur": { "nom": "John Doe" },
           "libelle": "Survie",
           "valeur": 0,
           "dateDebut": "2022-12-31T21:00:00.000Z",
-          "dateFin": null,
-          "tauxAmortissement": null,
-          "jour": 2,
-          "valeurConstante": -300000
-        },
+          "dateFin": null,  
+          "tauxAmortissement": null,  
+          "jour": 1,
+          "valeurConstante": -350000  
+        }
+      ]
+    }
+  },
+  {
+    "model": "Patrimoine",
+    "data": {
+      "possesseur": { "nom": "Jane Smith" },
+      "possessions": [
         {
-          "possesseur": { "nom": "John Doe" },
-          "libelle": "MacBook Pro",
-          "valeur": 4000000,
-          "dateDebut": "2023-12-25T00:00:00.000Z",
-          "dateFin": null,
+          "possesseur": { "nom": "Jane Smith" },
+          "libelle": "Laptop Dell",
+          "valeur": 3000000,
+          "dateDebut": "2023-05-10T00:00:00.000Z",
+          "dateFin": "2026-05-10T00:00:00.000Z",
           "tauxAmortissement": 5
         },
         {
-          "possesseur": { "nom": "John Doe" },
-          "libelle": "Alternance",
-          "valeur": 0,
-          "dateDebut": "2022-12-31T21:00:00.000Z",
-          "dateFin": null,
-          "tauxAmortissement": null,
-          "jour": 1,
-          "valeurConstante": 500000
-        },
-        {
-          "possesseur": { "nom": "John Doe" },
-          "libelle": "Survie",
-          "valeur": 0,
-          "dateDebut": "2022-12-31T21:00:00.000Z",
-          "dateFin": null,
-          "tauxAmortissement": null,
-          "jour": 2,
-          "valeurConstante": -300000
+          "possesseur": { "nom": "Jane Smith" },
+          "libelle": "Vélo de Route",
+          "valeur": 800000,
+          "dateDebut": "2024-01-01T00:00:00.000Z",
+          "dateFin": "2026-01-01T00:00:00.000Z",
+          "tauxAmortissement": 10
         }
       ]
     }
