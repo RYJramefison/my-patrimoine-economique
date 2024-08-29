@@ -1,0 +1,46 @@
+/* Style du titre */
+.text-center h1 {
+    color: #e74c3c; /* Rouge moderne */
+    border-bottom: 2px solid #e74c3c; /* Bordure rouge sous le titre */
+    padding-bottom: 10px;
+    display: inline-block;
+}
+
+/* Style pour les boutons */
+.btn-dark {
+    background-color: #333; /* Couleur sombre mais moderne */
+    border-color: #333;
+}
+
+.btn-dark:hover {
+    background-color: #555; /* Couleur plus claire au survol */
+    border-color: #444;
+}
+
+/* Style pour les tables */
+.table-modern {
+    border: 1px solid #dee2e6;
+    border-radius: 0.375rem;
+}
+
+.table-modern thead {
+    background-color: #f8f9fa;
+}
+
+.table-modern th {
+    border-bottom: 2px solid #dee2e6;
+    color: #333;
+}
+
+.table-modern tbody tr:nth-of-type(odd) {
+    background-color: #f1f1f1;
+}
+
+.table-modern tbody tr:hover {
+    background-color: #e9ecef;
+}
+
+.table-modern td {
+    border: 1px solid #dee2e6;
+}
+

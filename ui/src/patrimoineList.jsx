@@ -1,0 +1,151 @@
+import React, { useState, useEffect } from 'react';
+import Argent from "../../models/possessions/Argent";
+import BienMateriel from "../../models/possessions/BienMateriel";
+import Flux from "../../models/possessions/Flux";
+import Patrimoine from "../../models/Patrimoine";
+import Personne from "../../models/Personne";
+import data from "../../data/data.json";
+import './App.css'; // Importer le fichier CSS personnalisé
+import '@fortawesome/fontawesome-free/css/all.min.css'; // Importer Font Awesome
+
+export default function App() {
+    const [personnes, setPersonnes] = useState([]);
+    const [patrimoines, setPatrimoines] = useState([]);
+    const [selectedPersonne, setSelectedPersonne] = useState(null);
+    const [date, setDate] = useState(new Date());
+    const [valeurPatrimoine, setValeurPatrimoine] = useState(0);
+
+    useEffect(() => {
+        const loadedPersonnesSet = new Set();
+        const loadedPatrimoines = [];
+
+        data.forEach(item => {
+            if (item.model === 'Personne') {
+                loadedPersonnesSet.add(item.data.nom); 
+            } else if (item.model === 'Patrimoine') {
+                const possesseurNom = item.data.possesseur.nom;
+                loadedPersonnesSet.add(possesseurNom);
+
+                const possessions = item.data.possessions.map(pos => {
+                    if (pos.valeurConstante !== undefined && pos.valeurConstante != null) {
+                        return new Flux(
+                            pos.possesseur.nom, 
+                            pos.libelle, 
+                            pos.valeurConstante,  
+                            new Date(pos.dateDebut), 
+                            pos.dateFin ? new Date(pos.dateFin) : null, 
+                            pos.tauxAmortissement, 
+                            pos.jour
+                        );
+                    } else {
+                        return new BienMateriel(
+                            pos.possesseur.nom, 
+                            pos.libelle, 
+                            pos.valeur, 
+                            new Date(pos.dateDebut), 
+                            pos.dateFin ? new Date(pos.dateFin) : null, 
+                            pos.tauxAmortissement
+                        );
+                    }
+                });
+                loadedPatrimoines.push(new Patrimoine(possesseurNom, possessions));
+            }
+        });
+
+        const loadedPersonnes = Array.from(loadedPersonnesSet).map(nom => new Personne(nom));
+
+        setPersonnes(loadedPersonnes);
+        setPatrimoines(loadedPatrimoines);
+    }, []);
+
+    const handlePersonneChange = (e) => {
+        const selected = e.target.value;
+        setSelectedPersonne(selected);
+    };
+
+    const handleDateChange = (e) => {
+        setDate(new Date(e.target.value));
+    };
+
+    const handleApplyClick = () => {
+        if (selectedPersonne) {
+            const patrimoine = patrimoines.find(p => p.possesseur === selectedPersonne);
+            if (patrimoine) {
+                const totalValue = patrimoine.getValeur(date);
+                setValeurPatrimoine(totalValue.toFixed(2));
+            } else {
+                setValeurPatrimoine(0);
+            }
+        }
+    };
+
+    const handleUpdate = (possession) => {
+        console.log("Mettre à jour :", possession);
+        // Implémentez la logique de mise à jour ici
+    };
+
+    const handleDelete = (possession) => {
+        console.log("Supprimer :", possession);
+        // Implémentez la logique de suppression ici
+    };
+
+    const patrimoine = patrimoines.find(p => p.possesseur === selectedPersonne);
+
+    return (
+        <div className="container mt-4">
+            <div className="text-center mb-4">
+                <h1 className="text-danger">Patrimoine</h1>
+            </div>
+            <div className="form-group mb-4">
+                <label htmlFor="personneSelect" className="form-label">Sélectionner une personne</label>
+                <select id="personneSelect" className="form-control" onChange={handlePersonneChange}>
+                    <option value="">Sélectionner une personne</option>
+                    {personnes.map((personne, index) => (
+                        <option key={index} value={personne.nom}>{personne.nom}</option>
+                    ))}
+                </select>
+            </div>
+            {selectedPersonne && patrimoine && (
+                <div className="table-responsive mb-4">
+                    <table className="table table-modern">
+                        <thead>
+                            <tr>
+                                <th>Libelle</th>
+                                <th>Valeur Initiale</th>
+                                <th>Date Début</th>
+                                <th>Date Fin</th>
+                                <th>Taux d'Amortissement (%)</th>
+                                <th>Valeur Actuelle</th>
+                                <th>Actions</th> {/* Nouvelle colonne pour les actions */}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {patrimoine.possessions.map((possession, index) => (
+                                <tr key={index}>
+                                    <td>{possession.libelle}</td>
+                                    <td>{possession.valeurConstante !== undefined ? possession.valeurConstante + " Ar" : possession.valeur + " Ar"}</td>
+                                    <td>{new Date(possession.dateDebut).toLocaleDateString()}</td>
+                                    <td>{possession.dateFin ? new Date(possession.dateFin).toLocaleDateString() : "non spécifiée"}</td>
+                                    <td>{possession.tauxAmortissement !== null ? possession.tauxAmortissement : 0}</td>
+                                    <td>{possession.getValeur(date).toFixed(2)} Ar</td>
+                                    <td>
+                                        <i className="fas fa-edit text-primary mx-2" style={{ cursor: 'pointer' }} onClick={() => handleUpdate(possession)}></i>
+                                        <i className="fas fa-trash text-secondary mx-2" style={{ cursor: 'pointer' }} onClick={() => handleDelete(possession)}></i>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+            )}
+            <div className="form-group mb-4">
+                <label htmlFor="datePicker" className="form-label">Choisir une date</label>
+                <input id="datePicker" type="date" className="form-control" onChange={handleDateChange} />
+            </div>
+            <div className="text-center">
+                <button className="btn btn-dark" onClick={handleApplyClick}>Appliquer</button>
+                <p className="mt-4 text-secondary">Valeur totale du patrimoine : {valeurPatrimoine} Ar</p>
+            </div>
+        </div>
+    );
+}

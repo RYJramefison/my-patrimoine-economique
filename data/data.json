@@ -1,74 +1,122 @@
 [
-  { 
-    "model": "Personne", 
-    "data": { 
-      "nom": "John Doe" 
-    } 
+  {
+    "model": "Patrimoine",
+    "data": {
+      "possesseur": {
+        "nom": "John Doe"
+      },
+      "possessions": [
+        {
+          "possesseur": {
+            "nom": "John Doe"
+          },
+          "libelle": "MacBook Pro",
+          "valeur": 4000000,
+          "dateDebut": "2023-12-25T00:00:00.000Z",
+          "dateFin": null,
+          "tauxAmortissement": 5
+        },
+        {
+          "possesseur": {
+            "nom": "John Doe"
+          },
+          "libelle": "Alternance",
+          "valeur": 0,
+          "dateDebut": "2022-12-31T21:00:00.000Z",
+          "dateFin": null,
+          "tauxAmortissement": null,
+          "valeurConstante": 500000,
+          "jour": 1
+        },
+        {
+          "possesseur": {
+            "nom": "John Doe"
+          },
+          "libelle": "Survie",
+          "valeur": 0,
+          "dateDebut": "2022-12-31T21:00:00.000Z",
+          "dateFin": null,
+          "tauxAmortissement": null,
+          "valeurConstante": -300000,
+          "jour": 2
+        }
+      ]
+    }
+  },
+  {
+    "model": "Patrimoine",
+    "data": {
+      "possesseur": {
+        "nom": "Juninho"
+      },
+      "possessions": [
+        {
+          "possesseur": {
+            "nom": "Juninho"
+          },
+          "libelle": "ASUS rog",
+          "valeur": 5000000,
+          "dateDebut": "2024-08-08T00:00:00.000Z",
+          "dateFin": null,
+          "tauxAmortissement": 2,
+          "valeurConstante": null,
+          "jour": null
+        },
+        {
+          "possesseur": {
+            "nom": "Juninho"
+          },
+          "libelle": "guitare",
+          "valeur": 3000000,
+          "dateDebut": "2024-08-18T00:00:00.000Z",
+          "dateFin": null,
+          "tauxAmortissement": 0,
+          "valeurConstante": null,
+          "jour": null
+        },
+        {
+          "possesseur": {
+            "nom": "Juninho"
+          },
+          "libelle": "Lunette",
+          "valeur": 600000,
+          "dateDebut": "2024-08-31T00:00:00.000Z",
+          "dateFin": "2026-12-28T00:00:00.000Z",
+          "tauxAmortissement": 1,
+          "valeurConstante": null,
+          "jour": null
+        },
+        {
+          "possesseur": {
+            "nom": "Juninho"
+          },
+          "libelle": "velo",
+          "valeur": 1000000,
+          "dateDebut": "2024-08-20T00:00:00.000Z",
+          "dateFin": null,
+          "tauxAmortissement": 0,
+          "valeurConstante": null,
+          "jour": null
+        },
+        {
+          "possesseur": {
+            "nom": "Juninho"
+          },
+          "libelle": "Redmi note 7 pro",
+          "valeur": 1700000,
+          "dateDebut": "2024-08-19T00:00:00.000Z",
+          "dateFin": null,
+          "tauxAmortissement": 2,
+          "valeurConstante": null,
+          "jour": null
+        }
+      ]
+    }
   },
   {
     "model": "Personne",
     "data": {
-      "nom": "Jane Smith"
-    }
-  },
-  {
-    "model": "Patrimoine",
-    "data": {
-      "possesseur": { "nom": "John Doe" },
-      "possessions": [
-        {
-          "possesseur": { "nom": "John Doe" },
-          "libelle": "MacBook Pro",
-          "valeur": 4500000,  
-          "dateDebut": "2023-12-25T00:00:00.000Z",
-          "dateFin": "2025-12-25T00:00:00.000Z",  
-          "tauxAmortissement": 5  
-        },
-        {
-          "possesseur": { "nom": "John Doe" },
-          "libelle": "Alternance",
-          "valeur": 0,
-          "dateDebut": "2022-12-31T21:00:00.000Z",
-          "dateFin": null,  
-          "tauxAmortissement": null,  
-          "jour": 1,
-          "valeurConstante": 550000  
-        },
-        {
-          "possesseur": { "nom": "John Doe" },
-          "libelle": "Survie",
-          "valeur": 0,
-          "dateDebut": "2022-12-31T21:00:00.000Z",
-          "dateFin": null,  
-          "tauxAmortissement": null,  
-          "jour": 1,
-          "valeurConstante": -350000  
-        }
-      ]
-    }
-  },
-  {
-    "model": "Patrimoine",
-    "data": {
-      "possesseur": { "nom": "Jane Smith" },
-      "possessions": [
-        {
-          "possesseur": { "nom": "Jane Smith" },
-          "libelle": "Laptop Dell",
-          "valeur": 3000000,
-          "dateDebut": "2023-05-10T00:00:00.000Z",
-          "dateFin": "2026-05-10T00:00:00.000Z",
-          "tauxAmortissement": 5
-        },
-        {
-          "possesseur": { "nom": "Jane Smith" },
-          "libelle": "Vélo de Route",
-          "valeur": 800000,
-          "dateDebut": "2024-01-01T00:00:00.000Z",
-          "dateFin": "2026-01-01T00:00:00.000Z",
-          "tauxAmortissement": 10
-        }
-      ]
+      "nom": "Juninho"
     }
   }
 ]

@@ -1,0 +1,17 @@
+.navbar-custom {
+    border: 2px solid #ffffff;
+    border-radius: 0.5rem; 
+    padding: 0 1rem;
+}
+
+.navbar-nav .nav-link {
+    padding: 0.5rem 1rem; 
+    margin: 0; 
+    transition: color 0.3s; 
+}
+
+.navbar-nav .nav-link:hover {
+    color: #f8f9fa; 
+    background-color: #343a40;
+    border-radius: 0.25rem;
+}
