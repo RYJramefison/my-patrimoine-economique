@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import Argent from "../../models/possessions/Argent";
 import BienMateriel from "../../models/possessions/BienMateriel";
 import Flux from "../../models/possessions/Flux";
@@ -84,9 +85,18 @@ export default function App() {
         // Implémentez la logique de mise à jour ici
     };
 
-    const handleDelete = (possession) => {
-        console.log("Supprimer :", possession);
-        // Implémentez la logique de suppression ici
+    const handleDelete = async (libelle) => {
+        try {
+            await axios.delete(`http://localhost:3000/api/possessions/${libelle}`);
+            // Mettre à jour les patrimoines après la suppression
+            const updatedPatrimoines = patrimoines.map(patrimoine => {
+                patrimoine.possessions = patrimoine.possessions.filter(pos => pos.libelle !== libelle);
+                return patrimoine;
+            }).filter(patrimoine => patrimoine.possessions.length > 0);
+            setPatrimoines(updatedPatrimoines);
+        } catch (error) {
+            console.error('Erreur lors de la suppression de la possession:', error.message);
+        }
     };
 
     const patrimoine = patrimoines.find(p => p.possesseur === selectedPersonne);
@@ -116,7 +126,7 @@ export default function App() {
                                 <th>Date Fin</th>
                                 <th>Taux d'Amortissement (%)</th>
                                 <th>Valeur Actuelle</th>
-                                <th>Actions</th> {/* Nouvelle colonne pour les actions */}
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -130,7 +140,7 @@ export default function App() {
                                     <td>{possession.getValeur(date).toFixed(2)} Ar</td>
                                     <td>
                                         <i className="fas fa-edit text-primary mx-2" style={{ cursor: 'pointer' }} onClick={() => handleUpdate(possession)}></i>
-                                        <i className="fas fa-trash text-secondary mx-2" style={{ cursor: 'pointer' }} onClick={() => handleDelete(possession)}></i>
+                                        <i className="fas fa-trash text-secondary mx-2" style={{ cursor: 'pointer' }} onClick={() => handleDelete(possession.libelle)}></i>
                                     </td>
                                 </tr>
                             ))}

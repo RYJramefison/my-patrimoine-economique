@@ -164,6 +164,62 @@ app.post('/api/possessions', (req, res) => {
   }
 });
 
+// Route pour supprimer une possession par libelle
+app.delete('/api/possessions/:libelle', (req, res) => {
+  const { libelle } = req.params;
+  let possessionFound = false;
+
+  // Parcourir chaque patrimoine pour trouver et supprimer la possession
+  for (const [key, patrimoine] of Object.entries(patrimoines)) {
+    const index = patrimoine.possessions.findIndex(p => p.libelle === libelle);
+    if (index !== -1) {
+      patrimoine.possessions.splice(index, 1);  // Supprimer la possession trouvée
+      possessionFound = true;
+      break;  // Possession trouvée, on peut quitter la boucle
+    }
+  }
+
+  if (!possessionFound) {
+    return res.status(404).send('Possession non trouvée');
+  }
+
+  // Mettre à jour les données sauvegardées
+  const updatedData = [];
+  for (const [key, patrimoine] of Object.entries(patrimoines)) {
+    updatedData.push({
+      model: 'Patrimoine',
+      data: {
+        possesseur: { nom: key },
+        possessions: patrimoine.possessions.map(p => ({
+          possesseur: { nom: p.possesseur },
+          libelle: p.libelle,
+          valeur: p.valeur,
+          dateDebut: p.dateDebut.toISOString(),
+          dateFin: p.dateFin ? p.dateFin.toISOString() : null,
+          tauxAmortissement: p.tauxAmortissement,
+          valeurConstante: p.valeurConstante,
+          jour: p.jour
+        }))
+      }
+    });
+  }
+
+  // Inclure les personnes existantes dans les données mises à jour
+  const existingPersons = loadData().filter(d => d.model === 'Personne').map(d => d.data.nom);
+  existingPersons.forEach(personName => {
+    if (!updatedData.some(data => data.model === 'Personne' && data.data.nom === personName)) {
+      updatedData.push({
+        model: 'Personne',
+        data: { nom: personName }
+      });
+    }
+  });
+
+  saveData(updatedData);
+
+  res.status(200).send('Possession supprimée avec succès');
+});
+
 const PORT = 3000;
 app.listen(PORT, () => {
   console.log(`Serveur en fonctionnement sur le port ${PORT}`);
