@@ -67,44 +67,14 @@
             "nom": "Juninho"
           },
           "libelle": "guitare",
-          "valeur": 3000000,
-          "dateDebut": "2024-08-18T00:00:00.000Z",
+          "valeur": 100000,
+          "dateDebut": "2024-08-20T00:00:00.000Z",
           "dateFin": null,
           "tauxAmortissement": 0,
           "valeurConstante": null,
           "jour": null
-        },
-        {
-          "possesseur": {
-            "nom": "Juninho"
-          },
-          "libelle": "Lunette",
-          "valeur": 600000,
-          "dateDebut": "2024-08-31T00:00:00.000Z",
-          "dateFin": "2026-12-28T00:00:00.000Z",
-          "tauxAmortissement": 1,
-          "valeurConstante": null,
-          "jour": null
-        },
-        {
-          "possesseur": {
-            "nom": "Juninho"
-          },
-          "libelle": "Redmi note 7 pro",
-          "valeur": 1700000,
-          "dateDebut": "2024-08-19T00:00:00.000Z",
-          "dateFin": null,
-          "tauxAmortissement": 2,
-          "valeurConstante": null,
-          "jour": null
         }
       ]
-    }
-  },
-  {
-    "model": "Personne",
-    "data": {
-      "nom": "Juninho"
     }
   }
 ]

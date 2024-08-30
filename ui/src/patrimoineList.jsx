@@ -1,4 +1,6 @@
+// patrimoineList.jsx
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Argent from "../../models/possessions/Argent";
 import BienMateriel from "../../models/possessions/BienMateriel";
@@ -6,15 +8,16 @@ import Flux from "../../models/possessions/Flux";
 import Patrimoine from "../../models/Patrimoine";
 import Personne from "../../models/Personne";
 import data from "../../data/data.json";
-import './App.css'; // Importer le fichier CSS personnalisé
-import '@fortawesome/fontawesome-free/css/all.min.css'; // Importer Font Awesome
+import './App.css';
+import '@fortawesome/fontawesome-free/css/all.min.css';
 
-export default function App() {
+export default function PatrimoineList() {
     const [personnes, setPersonnes] = useState([]);
     const [patrimoines, setPatrimoines] = useState([]);
     const [selectedPersonne, setSelectedPersonne] = useState(null);
     const [date, setDate] = useState(new Date());
     const [valeurPatrimoine, setValeurPatrimoine] = useState(0);
+    const navigate = useNavigate();  // Hook pour la navigation
 
     useEffect(() => {
         const loadedPersonnesSet = new Set();
@@ -81,14 +84,13 @@ export default function App() {
     };
 
     const handleUpdate = (possession) => {
-        console.log("Mettre à jour :", possession);
-        // Implémentez la logique de mise à jour ici
+        navigate(`/editPossession/${possession.libelle}`);
     };
+    
 
     const handleDelete = async (libelle) => {
         try {
             await axios.delete(`http://localhost:3000/api/possessions/${libelle}`);
-            // Mettre à jour les patrimoines après la suppression
             const updatedPatrimoines = patrimoines.map(patrimoine => {
                 patrimoine.possessions = patrimoine.possessions.filter(pos => pos.libelle !== libelle);
                 return patrimoine;
