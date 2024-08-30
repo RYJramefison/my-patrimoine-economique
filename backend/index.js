@@ -69,11 +69,6 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-app.get('/api/personnes', (req, res) => {
-  const personnes = Object.keys(patrimoines).map(nom => ({ nom }));
-  res.json(personnes);
-});
-
 app.get('/api/possessions', (req, res) => {
   const allPossessions = [];
   for (const patrimoine of Object.values(patrimoines)) {
@@ -98,56 +93,6 @@ app.get('/api/possessions/:libelle', (req, res) => {
   } else {
     res.status(404).send('Possession non trouvée');
   }
-});
-
-app.get('/api/patrimoine', (req, res) => {
-  const { dateDebut, dateFin, jour } = req.query;
-
-  if (!dateDebut || !dateFin || !jour) {
-      return res.status(400).json({ error: 'Tous les paramètres (dateDebut, dateFin, jour) sont requis' });
-  }
-
-  const startDate = new Date(dateDebut);
-  const endDate = new Date(dateFin);
-  const jourFilter = parseInt(jour, 10);
-  
-  const results = {};
-
-  for (const patrimoine of Object.values(patrimoines)) {
-      patrimoine.possessions.forEach(possession => {
-          if (possession.dateDebut <= endDate && (!possession.dateFin || possession.dateFin >= startDate)) {
-              const currentDate = new Date(startDate);
-              while (currentDate <= endDate) {
-                  const dateKey = `${currentDate.getFullYear()}-${currentDate.getMonth() + 1}-${currentDate.getDate()}`;
-                  if (!results[dateKey]) {
-                      results[dateKey] = 0;
-                  }
-
-                  if (possession.jour === jour) {
-                      results[dateKey] += possession.valeur;
-                  }
-
-                  currentDate.setDate(currentDate.getDate() + 1);
-              }
-          }
-      });
-  }
-
-  const data = {
-      labels: Object.keys(results),
-      datasets: [
-          {
-              label: 'Valeur du Patrimoine',
-              data: Object.values(results),
-              fill: false,
-              backgroundColor: 'rgba(75,192,192,0.4)',
-              borderColor: 'rgba(75,192,192,1)',
-              borderWidth: 1
-          }
-      ]
-  };
-
-  res.json(data);
 });
 
 app.post('/api/possessions', (req, res) => {
@@ -217,12 +162,10 @@ app.put('/api/possessions/:libelle', (req, res) => {
   const { valeur, dateDebut, dateFin, taux, valeurConstante, jour } = req.body;
 
   let possessionTrouvee = null;
-  let possessionMiseAJour = false;
 
   for (const patrimoine of Object.values(patrimoines)) {
-    const index = patrimoine.possessions.findIndex(p => p.libelle === libelle);
-    if (index !== -1) {
-      possessionTrouvee = patrimoine.possessions[index];
+    possessionTrouvee = patrimoine.possessions.find(p => p.libelle === libelle);
+    if (possessionTrouvee) {
       possessionTrouvee.valeur = parseFloat(valeur);
       possessionTrouvee.dateDebut = new Date(dateDebut);
       possessionTrouvee.dateFin = dateFin ? new Date(dateFin) : null;
@@ -233,48 +176,6 @@ app.put('/api/possessions/:libelle', (req, res) => {
       if (jour !== undefined) {
         possessionTrouvee.jour = parseInt(jour, 10);
       }
-      possessionMiseAJour = true;
-      break;
-    }
-  }
-
-  if (!possessionMiseAJour) {
-    return res.status(404).send('Possession non trouvée');
-  }
-
-  const updatedData = Object.entries(patrimoines).map(([key, patrimoine]) => ({
-    model: 'Patrimoine',
-    data: {
-      possesseur: { nom: key },
-      possessions: patrimoine.possessions.map(p => ({
-        possesseur: { nom: p.possesseur },
-        libelle: p.libelle,
-        valeur: p.valeur,
-        dateDebut: p.dateDebut.toISOString(),
-        dateFin: p.dateFin ? p.dateFin.toISOString() : null,
-        tauxAmortissement: p.tauxAmortissement,
-        valeurConstante: p.valeurConstante,
-        jour: p.jour
-      }))
-    }
-  }));
-
-  saveData(updatedData);
-
-  res.json(possessionTrouvee);
-});
-
-app.post('/api/possessions/:libelle/close', (req, res) => {
-  const { libelle } = req.params;
-  const currentDate = new Date();
-
-  let possessionTrouvee = null;
-
-  for (const patrimoine of Object.values(patrimoines)) {
-    const index = patrimoine.possessions.findIndex(p => p.libelle === libelle);
-    if (index !== -1) {
-      possessionTrouvee = patrimoine.possessions[index];
-      possessionTrouvee.dateFin = currentDate;
       break;
     }
   }
@@ -302,9 +203,50 @@ app.post('/api/possessions/:libelle/close', (req, res) => {
 
   saveData(updatedData);
 
-  res.json(possessionTrouvee);
+  res.status(200).json(possessionTrouvee);
 });
 
-app.listen(3000, () => {
-  console.log('Serveur démarré sur le port 3000');
+app.delete('/api/possessions/:libelle', (req, res) => {
+  const { libelle } = req.params;
+
+  let possessionFound = false;
+
+  for (const [key, patrimoine] of Object.entries(patrimoines)) {
+    const index = patrimoine.possessions.findIndex(p => p.libelle === libelle);
+    if (index !== -1) {
+      patrimoine.possessions.splice(index, 1);
+      possessionFound = true;
+      break;
+    }
+  }
+
+  if (!possessionFound) {
+    return res.status(404).send('Possession non trouvée');
+  }
+
+  const updatedData = Object.entries(patrimoines).map(([key, patrimoine]) => ({
+    model: 'Patrimoine',
+    data: {
+      possesseur: { nom: key },
+      possessions: patrimoine.possessions.map(p => ({
+        possesseur: { nom: p.possesseur },
+        libelle: p.libelle,
+        valeur: p.valeur,
+        dateDebut: p.dateDebut.toISOString(),
+        dateFin: p.dateFin ? p.dateFin.toISOString() : null,
+        tauxAmortissement: p.tauxAmortissement,
+        valeurConstante: p.valeurConstante,
+        jour: p.jour
+      }))
+    }
+  }));
+
+  saveData(updatedData);
+
+  res.status(200).send('Possession supprimée avec succès');
+});
+
+const PORT = 3000;
+app.listen(PORT, () => {
+  console.log(`Serveur en fonctionnement sur le port ${PORT}`);
 });

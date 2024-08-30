@@ -67,10 +67,10 @@
             "nom": "Juninho"
           },
           "libelle": "guitare",
-          "valeur": 100000,
-          "dateDebut": "2024-08-20T00:00:00.000Z",
+          "valeur": 10000,
+          "dateDebut": "2024-08-30T00:00:00.000Z",
           "dateFin": null,
-          "tauxAmortissement": 0,
+          "tauxAmortissement": 2,
           "valeurConstante": null,
           "jour": null
         }

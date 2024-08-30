@@ -1,3 +1,4 @@
+// patrimoineList.jsx
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -85,10 +86,11 @@ export default function PatrimoineList() {
     const handleUpdate = (possession) => {
         navigate(`/editPossession/${possession.libelle}`);
     };
+    
 
     const handleDelete = async (libelle) => {
         try {
-            await axios.delete(`/api/possessions/${libelle}`);
+            await axios.delete(`http://localhost:3000/api/possessions/${libelle}`);
             const updatedPatrimoines = patrimoines.map(patrimoine => {
                 patrimoine.possessions = patrimoine.possessions.filter(pos => pos.libelle !== libelle);
                 return patrimoine;
@@ -133,7 +135,7 @@ export default function PatrimoineList() {
                             {patrimoine.possessions.map((possession, index) => (
                                 <tr key={index}>
                                     <td>{possession.libelle}</td>
-                                    <td>{possession.valeurConstante !== undefined ? `${possession.valeurConstante} Ar` : `${possession.valeur} Ar`}</td>
+                                    <td>{possession.valeurConstante !== undefined ? possession.valeurConstante + " Ar" : possession.valeur + " Ar"}</td>
                                     <td>{new Date(possession.dateDebut).toLocaleDateString()}</td>
                                     <td>{possession.dateFin ? new Date(possession.dateFin).toLocaleDateString() : "non spécifiée"}</td>
                                     <td>{possession.tauxAmortissement !== null ? possession.tauxAmortissement : 0}</td>
