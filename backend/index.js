@@ -10,6 +10,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const dataFilePath = path.join(__dirname, '../data/data.json');
 
+// Charger les données du fichier JSON
 const loadData = () => {
   try {
     const data = fs.readFileSync(dataFilePath, 'utf8');
@@ -20,6 +21,7 @@ const loadData = () => {
   }
 };
 
+// Sauvegarder les données dans le fichier JSON
 const saveData = (data) => {
   try {
     fs.writeFileSync(dataFilePath, JSON.stringify(data, null, 2), 'utf8');
@@ -29,6 +31,7 @@ const saveData = (data) => {
   }
 };
 
+// Initialiser les données à partir du fichier JSON
 const initializeData = () => {
   const jsonData = loadData();
   const patrimoines = {};
@@ -63,12 +66,13 @@ const initializeData = () => {
   return patrimoines;
 };
 
+// Créer une instance d'application Express
 const patrimoines = initializeData();
-
 const app = express();
 app.use(express.json());
 app.use(cors());
 
+// Endpoint pour obtenir toutes les possessions
 app.get('/api/possessions', (req, res) => {
   const allPossessions = [];
   for (const patrimoine of Object.values(patrimoines)) {
@@ -77,6 +81,7 @@ app.get('/api/possessions', (req, res) => {
   res.json(allPossessions);
 });
 
+// Endpoint pour obtenir une possession par libellé
 app.get('/api/possessions/:libelle', (req, res) => {
   const { libelle } = req.params;
   let possessionTrouvee = null;
@@ -95,6 +100,13 @@ app.get('/api/possessions/:libelle', (req, res) => {
   }
 });
 
+// Endpoint pour obtenir toutes les personnes
+app.get('/api/personnes', (req, res) => {
+  const personnes = Object.keys(patrimoines).map(nom => ({ nom }));
+  res.json(personnes);
+});
+
+// Endpoint pour créer une nouvelle possession
 app.post('/api/possessions', (req, res) => {
   const { nom, libelle, valeur, dateDebut, dateFin, taux, valeurConstante, jour } = req.body;
 
@@ -157,6 +169,7 @@ app.post('/api/possessions', (req, res) => {
   res.status(201).json(newPossession);
 });
 
+// Endpoint pour mettre à jour une possession par libellé
 app.put('/api/possessions/:libelle', (req, res) => {
   const { libelle } = req.params;
   const { valeur, dateDebut, dateFin, taux, valeurConstante, jour } = req.body;
@@ -206,6 +219,7 @@ app.put('/api/possessions/:libelle', (req, res) => {
   res.status(200).json(possessionTrouvee);
 });
 
+// Endpoint pour supprimer une possession par libellé
 app.delete('/api/possessions/:libelle', (req, res) => {
   const { libelle } = req.params;
 
@@ -246,6 +260,7 @@ app.delete('/api/possessions/:libelle', (req, res) => {
   res.status(200).send('Possession supprimée avec succès');
 });
 
+// Lancer le serveur
 const PORT = 3000;
 app.listen(PORT, () => {
   console.log(`Serveur en fonctionnement sur le port ${PORT}`);

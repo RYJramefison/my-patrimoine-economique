@@ -27,18 +27,6 @@
           "tauxAmortissement": null,
           "valeurConstante": 500000,
           "jour": 1
-        },
-        {
-          "possesseur": {
-            "nom": "John Doe"
-          },
-          "libelle": "Survie",
-          "valeur": 0,
-          "dateDebut": "2022-12-31T21:00:00.000Z",
-          "dateFin": null,
-          "tauxAmortissement": null,
-          "valeurConstante": -300000,
-          "jour": 2
         }
       ]
     }
@@ -57,18 +45,6 @@
           "libelle": "ASUS rog",
           "valeur": 5000000,
           "dateDebut": "2024-08-08T00:00:00.000Z",
-          "dateFin": null,
-          "tauxAmortissement": 2,
-          "valeurConstante": null,
-          "jour": null
-        },
-        {
-          "possesseur": {
-            "nom": "Juninho"
-          },
-          "libelle": "guitare",
-          "valeur": 10000,
-          "dateDebut": "2024-08-30T00:00:00.000Z",
           "dateFin": null,
           "tauxAmortissement": 2,
           "valeurConstante": null,
