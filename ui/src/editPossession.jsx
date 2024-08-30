@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { useNavigate, useParams } from 'react-router-dom';
 
 const EditPossession = () => {
   const { libelle } = useParams();
@@ -49,16 +49,10 @@ const EditPossession = () => {
   };
 
   return (
-    <div>
+    <div className="container mt-4">
       <h2>Modifier la Possession</h2>
       {error && <p style={{ color: 'red' }}>{error}</p>}
       <form onSubmit={handleSubmit}>
-        <input type="text" name="libelle" value={formData.libelle} onChange={handleChange} required />
-        <input type="number" name="valeur" value={formData.valeur} onChange={handleChange} required />
-        <input type="date" name="dateDebut" value={formData.dateDebut} onChange={handleChange} required />
-        <input type="date" name="dateFin" value={formData.dateFin || ''} onChange={handleChange} />
-        <input type="number" name="taux" value={formData.taux} onChange={handleChange} required />
-        <button type="submit">Mettre à jour</button>
       </form>
     </div>
   );
