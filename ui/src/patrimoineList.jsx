@@ -1,15 +1,14 @@
-// patrimoineList.jsx
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import LineChartComponent from './chart'; 
+import './App.css';
+import '@fortawesome/fontawesome-free/css/all.min.css';
 import Argent from "../../models/possessions/Argent";
 import BienMateriel from "../../models/possessions/BienMateriel";
 import Flux from "../../models/possessions/Flux";
 import Patrimoine from "../../models/Patrimoine";
 import Personne from "../../models/Personne";
 import data from "../../data/data.json";
-import './App.css';
-import '@fortawesome/fontawesome-free/css/all.min.css';
 
 export default function PatrimoineList() {
     const [personnes, setPersonnes] = useState([]);
@@ -17,15 +16,17 @@ export default function PatrimoineList() {
     const [selectedPersonne, setSelectedPersonne] = useState(null);
     const [date, setDate] = useState(new Date());
     const [valeurPatrimoine, setValeurPatrimoine] = useState(0);
-    const navigate = useNavigate();  // Hook pour la navigation
+    const [showChart, setShowChart] = useState(false);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const loadedPersonnesSet = new Set();
         const loadedPatrimoines = [];
 
+        // Chargement des données
         data.forEach(item => {
             if (item.model === 'Personne') {
-                loadedPersonnesSet.add(item.data.nom); 
+                loadedPersonnesSet.add(item.data.nom);
             } else if (item.model === 'Patrimoine') {
                 const possesseurNom = item.data.possesseur.nom;
                 loadedPersonnesSet.add(possesseurNom);
@@ -77,27 +78,11 @@ export default function PatrimoineList() {
             if (patrimoine) {
                 const totalValue = patrimoine.getValeur(date);
                 setValeurPatrimoine(totalValue.toFixed(2));
+                setShowChart(true);
             } else {
                 setValeurPatrimoine(0);
+                setShowChart(false);
             }
-        }
-    };
-
-    const handleUpdate = (possession) => {
-        navigate(`/editPossession/${possession.libelle}`);
-    };
-    
-
-    const handleDelete = async (libelle) => {
-        try {
-            await axios.delete(`http://localhost:3000/api/possessions/${libelle}`);
-            const updatedPatrimoines = patrimoines.map(patrimoine => {
-                patrimoine.possessions = patrimoine.possessions.filter(pos => pos.libelle !== libelle);
-                return patrimoine;
-            }).filter(patrimoine => patrimoine.possessions.length > 0);
-            setPatrimoines(updatedPatrimoines);
-        } catch (error) {
-            console.error('Erreur lors de la suppression de la possession:', error.message);
         }
     };
 
@@ -128,24 +113,24 @@ export default function PatrimoineList() {
                                 <th>Date Fin</th>
                                 <th>Taux d'Amortissement (%)</th>
                                 <th>Valeur Actuelle</th>
-                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {patrimoine.possessions.map((possession, index) => (
-                                <tr key={index}>
-                                    <td>{possession.libelle}</td>
-                                    <td>{possession.valeurConstante !== undefined ? possession.valeurConstante + " Ar" : possession.valeur + " Ar"}</td>
-                                    <td>{new Date(possession.dateDebut).toLocaleDateString()}</td>
-                                    <td>{possession.dateFin ? new Date(possession.dateFin).toLocaleDateString() : "non spécifiée"}</td>
-                                    <td>{possession.tauxAmortissement !== null ? possession.tauxAmortissement : 0}</td>
-                                    <td>{possession.getValeur(date).toFixed(2)} Ar</td>
-                                    <td>
-                                        <i className="fas fa-edit text-primary mx-2" style={{ cursor: 'pointer' }} onClick={() => handleUpdate(possession)}></i>
-                                        <i className="fas fa-trash text-secondary mx-2" style={{ cursor: 'pointer' }} onClick={() => handleDelete(possession.libelle)}></i>
-                                    </td>
-                                </tr>
-                            ))}
+                            {patrimoine.possessions.map((possession, index) => {
+                                // Vérifier la condition pour afficher la valeur actuelle
+                                const isDateDebutGreaterThanSelectedDate = possession.dateDebut > date;
+                                const valeurActuelle = possession.valeurConstante !== undefined && isDateDebutGreaterThanSelectedDate ? 0 : possession.getValeur(date);
+                                return (
+                                    <tr key={index}>
+                                        <td>{possession.libelle}</td>
+                                        <td>{possession.valeurConstante !== undefined ? possession.valeurConstante + " Ar" : possession.valeur + " Ar"}</td>
+                                        <td>{new Date(possession.dateDebut).toLocaleDateString()}</td>
+                                        <td>{possession.dateFin ? new Date(possession.dateFin).toLocaleDateString() : "non spécifiée"}</td>
+                                        <td>{possession.tauxAmortissement !== null ? possession.tauxAmortissement : 0}</td>
+                                        <td>{valeurActuelle.toFixed(2)} Ar</td>
+                                    </tr>
+                                );
+                            })}
                         </tbody>
                     </table>
                 </div>
@@ -158,6 +143,15 @@ export default function PatrimoineList() {
                 <button className="btn btn-dark" onClick={handleApplyClick}>Appliquer</button>
                 <p className="mt-4 text-secondary">Valeur totale du patrimoine : {valeurPatrimoine} Ar</p>
             </div>
+            
+            {showChart && (
+                <div className="mb-4">
+                    <h3 className="text-center">Graphique de patrimoine</h3>
+                    <LineChartComponent 
+                        possessions={patrimoine ? patrimoine.possessions : []} 
+                    />
+                </div>
+            )}
         </div>
     );
 }

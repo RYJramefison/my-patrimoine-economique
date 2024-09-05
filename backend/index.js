@@ -86,10 +86,14 @@ app.get('/api/possessions/:libelle', (req, res) => {
   const { libelle } = req.params;
   let possessionTrouvee = null;
 
+  // Supposons que patrimoines est un tableau ou un objet contenant des patrimoines
   for (const patrimoine of Object.values(patrimoines)) {
-    possessionTrouvee = patrimoine.possessions.find(p => p.libelle === libelle);
-    if (possessionTrouvee) {
-      break;
+    // Vérifiez si patrimoine.possessions existe et est un tableau
+    if (Array.isArray(patrimoine.possessions)) {
+      possessionTrouvee = patrimoine.possessions.find(p => p.libelle === libelle);
+      if (possessionTrouvee) {
+        break;
+      }
     }
   }
 
@@ -99,6 +103,7 @@ app.get('/api/possessions/:libelle', (req, res) => {
     res.status(404).send('Possession non trouvée');
   }
 });
+
 
 // Endpoint pour obtenir toutes les personnes
 app.get('/api/personnes', (req, res) => {
@@ -172,31 +177,43 @@ app.post('/api/possessions', (req, res) => {
 // Endpoint pour mettre à jour une possession par libellé
 app.put('/api/possessions/:libelle', (req, res) => {
   const { libelle } = req.params;
-  const { valeur, dateDebut, dateFin, taux, valeurConstante, jour } = req.body;
+  const { nouveauLibelle, valeur, dateDebut, dateFin, taux, valeurConstante, jour } = req.body;
 
   let possessionTrouvee = null;
 
+  // Rechercher la possession dans les patrimoines
   for (const patrimoine of Object.values(patrimoines)) {
     possessionTrouvee = patrimoine.possessions.find(p => p.libelle === libelle);
     if (possessionTrouvee) {
+      // Mettre à jour le nom du libelle si nouveauLibelle est fourni
+      if (nouveauLibelle) {
+        possessionTrouvee.libelle = nouveauLibelle;
+      }
+      
+      // Mettre à jour les autres détails de la possession
       possessionTrouvee.valeur = parseFloat(valeur);
       possessionTrouvee.dateDebut = new Date(dateDebut);
       possessionTrouvee.dateFin = dateFin ? new Date(dateFin) : null;
       possessionTrouvee.tauxAmortissement = parseFloat(taux);
+      
       if (valeurConstante !== undefined) {
         possessionTrouvee.valeurConstante = parseFloat(valeurConstante);
       }
+      
       if (jour !== undefined) {
         possessionTrouvee.jour = parseInt(jour, 10);
       }
-      break;
+
+      break; // Sortir de la boucle si la possession est trouvée et mise à jour
     }
   }
 
+  // Si la possession n'est pas trouvée, retourner une erreur
   if (!possessionTrouvee) {
     return res.status(404).send('Possession non trouvée');
   }
 
+  // Préparer les données pour la sauvegarde
   const updatedData = Object.entries(patrimoines).map(([key, patrimoine]) => ({
     model: 'Patrimoine',
     data: {
@@ -205,8 +222,8 @@ app.put('/api/possessions/:libelle', (req, res) => {
         possesseur: { nom: p.possesseur },
         libelle: p.libelle,
         valeur: p.valeur,
-        dateDebut: p.dateDebut.toISOString(),
-        dateFin: p.dateFin ? p.dateFin.toISOString() : null,
+        dateDebut: p.dateDebut instanceof Date && !isNaN(p.dateDebut) ? p.dateDebut.toISOString() : null,
+        dateFin: p.dateFin instanceof Date && !isNaN(p.dateFin) ? p.dateFin.toISOString() : null,
         tauxAmortissement: p.tauxAmortissement,
         valeurConstante: p.valeurConstante,
         jour: p.jour
@@ -214,10 +231,63 @@ app.put('/api/possessions/:libelle', (req, res) => {
     }
   }));
 
+  // Sauvegarder les données mises à jour dans le fichier JSON
   saveData(updatedData);
 
-  res.status(200).json(possessionTrouvee);
+  // Retourner la possession mise à jour comme réponse
+  res.status(200).json({
+    message: 'Possession mise à jour avec succès',
+    possession: possessionTrouvee
+  });
 });
+
+// Endpoint pour fermer une possession par libellé
+app.put('/api/possessions/:libelle/close', (req, res) => {
+  const { libelle } = req.params;
+
+  let possessionTrouvee = null;
+
+  for (const patrimoine of Object.values(patrimoines)) {
+    possessionTrouvee = patrimoine.possessions.find(p => p.libelle === libelle);
+    if (possessionTrouvee) {
+      possessionTrouvee.dateFin = new Date(); // Met à jour la date de fin avec la date actuelle
+      break;
+    }
+  }
+
+  if (!possessionTrouvee) {
+    return res.status(404).send('Possession non trouvée');
+  }
+
+  // Préparer les données pour la sauvegarde
+  const updatedData = Object.entries(patrimoines).map(([key, patrimoine]) => ({
+    model: 'Patrimoine',
+    data: {
+      possesseur: { nom: key },
+      possessions: patrimoine.possessions.map(p => ({
+        possesseur: { nom: p.possesseur },
+        libelle: p.libelle,
+        valeur: p.valeur,
+        dateDebut: p.dateDebut instanceof Date && !isNaN(p.dateDebut) ? p.dateDebut.toISOString() : null,
+        dateFin: p.dateFin instanceof Date && !isNaN(p.dateFin) ? p.dateFin.toISOString() : null,
+        tauxAmortissement: p.tauxAmortissement,
+        valeurConstante: p.valeurConstante,
+        jour: p.jour
+      }))
+    }
+  }));
+
+  // Sauvegarder les données mises à jour dans le fichier JSON
+  saveData(updatedData);
+
+  // Retourner la possession mise à jour comme réponse
+  res.status(200).json({
+    message: 'Possession fermée avec succès',
+    possession: possessionTrouvee
+  });
+});
+
+
 
 // Endpoint pour supprimer une possession par libellé
 app.delete('/api/possessions/:libelle', (req, res) => {

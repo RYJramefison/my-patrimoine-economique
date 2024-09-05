@@ -15,6 +15,7 @@
     "axios": "^1.7.5",
     "bootstrap": "^5.3.3",
     "chart.js": "^4.4.4",
+    "chartjs-adapter-date-fns": "^3.0.0",
     "react": "^18.3.1",
     "react-bootstrap": "^2.10.4",
     "react-chartjs-2": "^5.2.0",
@@ -23,6 +24,7 @@
     "react-router-dom": "^6.26.1"
   },
   "devDependencies": {
+    "@types/bootstrap": "^5.2.10",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.3.1",

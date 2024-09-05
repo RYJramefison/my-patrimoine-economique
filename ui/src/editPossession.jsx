@@ -51,8 +51,97 @@ const EditPossession = () => {
   return (
     <div className="container mt-4">
       <h2>Modifier la Possession</h2>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+      {error && <div className="alert alert-danger" role="alert">{error}</div>}
+
       <form onSubmit={handleSubmit}>
+        <div className="mb-3">
+          <label htmlFor="libelle" className="form-label">Libelle</label>
+          <input
+            type="text"
+            id="libelle"
+            name="libelle"
+            className="form-control"
+            value={formData.libelle}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        <div className="mb-3">
+          <label htmlFor="valeur" className="form-label">Valeur</label>
+          <input
+            type="number"
+            id="valeur"
+            name="valeur"
+            className="form-control"
+            value={formData.valeur}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        <div className="mb-3">
+          <label htmlFor="dateDebut" className="form-label">Date Début</label>
+          <input
+            type="date"
+            id="dateDebut"
+            name="dateDebut"
+            className="form-control"
+            value={formData.dateDebut}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        <div className="mb-3">
+          <label htmlFor="dateFin" className="form-label">Date Fin</label>
+          <input
+            type="date"
+            id="dateFin"
+            name="dateFin"
+            className="form-control"
+            value={formData.dateFin}
+            onChange={handleChange}
+          />
+        </div>
+
+        <div className="mb-3">
+          <label htmlFor="taux" className="form-label">Taux d'Amortissement (%)</label>
+          <input
+            type="number"
+            id="taux"
+            name="taux"
+            className="form-control"
+            value={formData.taux}
+            onChange={handleChange}
+          />
+        </div>
+
+        <div className="mb-3">
+          <label htmlFor="valeurConstante" className="form-label">Valeur Constante</label>
+          <input
+            type="number"
+            id="valeurConstante"
+            name="valeurConstante"
+            className="form-control"
+            value={formData.valeurConstante}
+            onChange={handleChange}
+          />
+        </div>
+
+        <div className="mb-3">
+          <label htmlFor="jour" className="form-label">Jour</label>
+          <input
+            type="number"
+            id="jour"
+            name="jour"
+            className="form-control"
+            value={formData.jour}
+            onChange={handleChange}
+          />
+        </div>
+
+        <button type="submit" className="btn btn-primary">Enregistrer</button>
       </form>
     </div>
   );
