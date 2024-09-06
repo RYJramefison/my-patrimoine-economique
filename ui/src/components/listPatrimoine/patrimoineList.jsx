@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import LineChartComponent from './chart'; 
-import './App.css';
+import LineChartComponent from '../chart/chart'; 
+import '../App.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
-import Argent from "../../models/possessions/Argent";
-import BienMateriel from "../../models/possessions/BienMateriel";
-import Flux from "../../models/possessions/Flux";
-import Patrimoine from "../../models/Patrimoine";
-import Personne from "../../models/Personne";
-import data from "../../data/data.json";
+import Argent from "../../../../models/possessions/Argent";
+import BienMateriel from "../../../../models/possessions/BienMateriel";
+import Flux from "../../../../models/possessions/Flux";
+import Patrimoine from "../../../../models/Patrimoine";
+import Personne from "../../../../models/Personne";
+import data from "../../../../data/data.json";
 
 export default function PatrimoineList() {
     const [personnes, setPersonnes] = useState([]);
@@ -23,7 +23,6 @@ export default function PatrimoineList() {
         const loadedPersonnesSet = new Set();
         const loadedPatrimoines = [];
 
-        // Chargement des données
         data.forEach(item => {
             if (item.model === 'Personne') {
                 loadedPersonnesSet.add(item.data.nom);
@@ -117,9 +116,19 @@ export default function PatrimoineList() {
                         </thead>
                         <tbody>
                             {patrimoine.possessions.map((possession, index) => {
-                                // Vérifier la condition pour afficher la valeur actuelle
+                                const isDateFinBeforeOrEqual = possession.dateFin && possession.dateFin <= date;
                                 const isDateDebutGreaterThanSelectedDate = possession.dateDebut > date;
-                                const valeurActuelle = possession.valeurConstante !== undefined && isDateDebutGreaterThanSelectedDate ? 0 : possession.getValeur(date);
+                                
+                                let valeurActuelle;
+
+                                if (isDateFinBeforeOrEqual) {
+                                    valeurActuelle = possession.getValeur(date);
+                                } else if (isDateDebutGreaterThanSelectedDate) {
+                                    valeurActuelle = 0;
+                                } else {
+                                    valeurActuelle = possession.getValeur(date);
+                                }
+
                                 return (
                                     <tr key={index}>
                                         <td>{possession.libelle}</td>

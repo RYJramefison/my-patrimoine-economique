@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Button, Container, Row, Col, Alert } from 'react-bootstrap';
-import PossessionsTable from './listPossession';
+import PossessionsTable from '../listPossession/listPossession';
 
 const AddPossessionForm = () => {
   const [formData, setFormData] = useState({
@@ -75,14 +75,12 @@ const AddPossessionForm = () => {
     }
   };
 
-  // Utilisation de useEffect pour masquer l'alerte après un certain temps
   useEffect(() => {
     if (success) {
       const timer = setTimeout(() => {
         setSuccess('');
-      }, 1500); // Masque l'alerte après 3 secondes
+      }, 1500);
 
-      // Nettoie le timeout si le composant est démonté ou si `success` change
       return () => clearTimeout(timer);
     }
   }, [success]);
@@ -205,7 +203,7 @@ const AddPossessionForm = () => {
         {success && <Alert variant="success" className="mt-4">{success}</Alert>}
       </div>
       <div>
-        <PossessionsTable />
+        <PossessionsTable/>
       </div>
     </Container>
   );

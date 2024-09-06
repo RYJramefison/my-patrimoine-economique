@@ -10,7 +10,6 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const dataFilePath = path.join(__dirname, '../data/data.json');
 
-// Charger les données du fichier JSON
 const loadData = () => {
   try {
     const data = fs.readFileSync(dataFilePath, 'utf8');
@@ -21,7 +20,6 @@ const loadData = () => {
   }
 };
 
-// Sauvegarder les données dans le fichier JSON
 const saveData = (data) => {
   try {
     fs.writeFileSync(dataFilePath, JSON.stringify(data, null, 2), 'utf8');
@@ -31,7 +29,6 @@ const saveData = (data) => {
   }
 };
 
-// Initialiser les données à partir du fichier JSON
 const initializeData = () => {
   const jsonData = loadData();
   const patrimoines = {};
@@ -66,7 +63,6 @@ const initializeData = () => {
   return patrimoines;
 };
 
-// Créer une instance d'application Express
 const patrimoines = initializeData();
 const app = express();
 app.use(express.json());
@@ -86,9 +82,7 @@ app.get('/api/possessions/:libelle', (req, res) => {
   const { libelle } = req.params;
   let possessionTrouvee = null;
 
-  // Supposons que patrimoines est un tableau ou un objet contenant des patrimoines
   for (const patrimoine of Object.values(patrimoines)) {
-    // Vérifiez si patrimoine.possessions existe et est un tableau
     if (Array.isArray(patrimoine.possessions)) {
       possessionTrouvee = patrimoine.possessions.find(p => p.libelle === libelle);
       if (possessionTrouvee) {
@@ -181,16 +175,13 @@ app.put('/api/possessions/:libelle', (req, res) => {
 
   let possessionTrouvee = null;
 
-  // Rechercher la possession dans les patrimoines
   for (const patrimoine of Object.values(patrimoines)) {
     possessionTrouvee = patrimoine.possessions.find(p => p.libelle === libelle);
     if (possessionTrouvee) {
-      // Mettre à jour le nom du libelle si nouveauLibelle est fourni
       if (nouveauLibelle) {
         possessionTrouvee.libelle = nouveauLibelle;
       }
       
-      // Mettre à jour les autres détails de la possession
       possessionTrouvee.valeur = parseFloat(valeur);
       possessionTrouvee.dateDebut = new Date(dateDebut);
       possessionTrouvee.dateFin = dateFin ? new Date(dateFin) : null;
@@ -250,7 +241,7 @@ app.put('/api/possessions/:libelle/close', (req, res) => {
   for (const patrimoine of Object.values(patrimoines)) {
     possessionTrouvee = patrimoine.possessions.find(p => p.libelle === libelle);
     if (possessionTrouvee) {
-      possessionTrouvee.dateFin = new Date(); // Met à jour la date de fin avec la date actuelle
+      possessionTrouvee.dateFin = new Date(); 
       break;
     }
   }
@@ -259,7 +250,6 @@ app.put('/api/possessions/:libelle/close', (req, res) => {
     return res.status(404).send('Possession non trouvée');
   }
 
-  // Préparer les données pour la sauvegarde
   const updatedData = Object.entries(patrimoines).map(([key, patrimoine]) => ({
     model: 'Patrimoine',
     data: {
@@ -277,10 +267,8 @@ app.put('/api/possessions/:libelle/close', (req, res) => {
     }
   }));
 
-  // Sauvegarder les données mises à jour dans le fichier JSON
   saveData(updatedData);
 
-  // Retourner la possession mise à jour comme réponse
   res.status(200).json({
     message: 'Possession fermée avec succès',
     possession: possessionTrouvee
@@ -330,7 +318,6 @@ app.delete('/api/possessions/:libelle', (req, res) => {
   res.status(200).send('Possession supprimée avec succès');
 });
 
-// Lancer le serveur
 const PORT = 3000;
 app.listen(PORT, () => {
   console.log(`Serveur en fonctionnement sur le port ${PORT}`);

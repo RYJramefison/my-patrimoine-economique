@@ -138,6 +138,7 @@ const EditPossession = () => {
             className="form-control"
             value={formData.jour}
             onChange={handleChange}
+            
           />
         </div>
 

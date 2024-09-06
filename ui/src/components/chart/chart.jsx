@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Line } from "react-chartjs-2";
+import { Filler } from "chart.js";
 import "bootstrap/dist/css/bootstrap.min.css";
 import 'chartjs-adapter-date-fns';
 import {
@@ -22,7 +23,8 @@ Chart.register(
   Title,
   Tooltip,
   Legend,
-  TimeScale
+  TimeScale,
+  Filler 
 );
 
 function LineChartComponent({ possessions }) {
@@ -32,15 +34,15 @@ function LineChartComponent({ possessions }) {
       {
         label: "Évolution de la valeur",
         data: [],
-        fill: false,
-        backgroundColor: "rgba(35, 135, 182, 0.6)",
+        fill: true,
+        backgroundColor: "rgba(35, 135, 182, 0.2)",
         borderColor: "rgb(35, 135, 182)",
         tension: 0.4,
+        pointRadius: 0, 
       }
     ]
   });
 
-  // État pour les dates de début et de fin
   const [dateDebut, setDateDebut] = useState("");
   const [dateFin, setDateFin] = useState("");
 
@@ -61,7 +63,6 @@ function LineChartComponent({ possessions }) {
       const valeurTotale = data.reduce((acc, possession) => {
         const possessionDateDebut = new Date(possession.dateDebut);
         
-        // Si la valeur est constante et la date de début est supérieure à la date actuelle, valeur actuelle = 0
         if (possession.valeurConstante !== undefined && possessionDateDebut > currentDate) {
           return acc;
         } else {
@@ -80,9 +81,11 @@ function LineChartComponent({ possessions }) {
         {
           label: "Évolution de la valeur",
           data: values,
-          backgroundColor: "rgba(35, 135, 182, 0.6)",
+          backgroundColor: "rgba(35, 135, 182, 0.2)",
           borderColor: "rgb(35, 135, 182)",
-          tension: 0.4,
+          tension: 0.5,
+          fill: true,
+          pointRadius: 0, 
         }
       ]
     });
@@ -131,8 +134,7 @@ function LineChartComponent({ possessions }) {
       }
     },
     animation: {
-      duration: 2000,
-      easing: "easeInOutBounce",
+      duration: 700,
     }
   };
 

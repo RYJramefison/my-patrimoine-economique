@@ -1,8 +1,8 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Menu from './menu';
+import Menu from './menu/menu';
 import Add from './add';  
-import PatrimoineList from './patrimoineList'; 
+import PatrimoineList from './listPatrimoine/patrimoineList'; 
 import EditPossession from './editPossession'; 
 
 export default function App() {

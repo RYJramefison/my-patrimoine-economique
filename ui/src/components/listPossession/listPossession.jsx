@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import Argent from "../../models/possessions/Argent";
-import BienMateriel from "../../models/possessions/BienMateriel";
-import Flux from "../../models/possessions/Flux";
-import Patrimoine from "../../models/Patrimoine";
-import Personne from "../../models/Personne";
-import data from "../../data/data.json";
-import './App.css';
+import Argent from "../../../../models/possessions/Argent";
+import BienMateriel from "../../../../models/possessions/BienMateriel";
+import Flux from "../../../../models/possessions/Flux";
+import Patrimoine from "../../../../models/Patrimoine";
+import Personne from "../../../../models/Personne";
+import data from "../../../../data/data.json";
+import '../App.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 
 export default function PossessionsTable() {
@@ -59,8 +59,8 @@ export default function PossessionsTable() {
     }, []);
 
     const handleUpdate = (possession) => {
-        setSelectedPossession({ ...possession }); // Clone l'objet possession
-        setShowModal(true); // Affiche le formulaire de mise à jour
+        setSelectedPossession({ ...possession }); 
+        setShowModal(true); 
     };
 
     const handleUpdateSubmit = async (e) => {
@@ -68,7 +68,6 @@ export default function PossessionsTable() {
         try {
             await axios.put(`http://localhost:3000/api/possessions/${selectedPossession.libelle}`, selectedPossession);
             setShowModal(false);
-            // Mettre à jour la possession localement après modification
             const updatedPatrimoines = patrimoines.map(patrimoine => {
                 patrimoine.possessions = patrimoine.possessions.map(pos => 
                     pos.libelle === selectedPossession.libelle ? selectedPossession : pos
@@ -92,7 +91,6 @@ export default function PossessionsTable() {
     const handleDelete = async (libelle) => {
         try {
             await axios.delete(`http://localhost:3000/api/possessions/${libelle}`);
-            // Mettre à jour les possessions localement après suppression
             const updatedPatrimoines = patrimoines.map(patrimoine => {
                 patrimoine.possessions = patrimoine.possessions.filter(pos => pos.libelle !== libelle);
                 return patrimoine;
@@ -106,13 +104,13 @@ export default function PossessionsTable() {
     const handleClose = async (libelle) => {
         try {
             const dateFin = new Date().toISOString();
-            await axios.put(`http://localhost:3000/api/possessions/${libelle}/close`, { dateFin }); // Correction de l'URL
+            await axios.put(`http://localhost:3000/api/possessions/${libelle}/close`, { dateFin });
             const updatedPatrimoines = patrimoines.map(patrimoine => {
                 patrimoine.possessions = patrimoine.possessions.map(pos => {
                     if (pos.libelle === libelle) {
                         return {
                             ...pos,
-                            dateFin: new Date() // Met à jour localement
+                            dateFin: new Date()
                         };
                     }
                     return pos;
@@ -124,6 +122,30 @@ export default function PossessionsTable() {
             console.error('Erreur lors de la fermeture de la possession:', error.message);
         }
     };
+
+    const calculateCurrentValue = (possession) => {
+        const now = new Date();
+        const start = new Date(possession.dateDebut);
+        const end = possession.dateFin ? new Date(possession.dateFin) : now;
+    
+        if (possession.valeurConstante != null) {
+            const months = (end.getFullYear() - start.getFullYear()) * 12 + end.getMonth() - start.getMonth();
+            const value = possession.valeur * Math.max(months, 0);
+            return value.toFixed(2);
+        }
+    
+        const years = (end - start) / (1000 * 60 * 60 * 24 * 365.25);
+        const rate = possession.tauxAmortissement / 100;
+        const value = possession.valeur * Math.pow((1 - rate), years);
+    
+        return value.toFixed(2);
+    };
+    
+
+    
+    
+    
+    
 
     return (
         <div className="container mt-lg-5">
@@ -147,17 +169,21 @@ export default function PossessionsTable() {
                                                 <th>Date Début</th>
                                                 <th>Date Fin</th>
                                                 <th>Taux d'Amortissement (%)</th>
+                                                <th>Valeur Actuelle</th> 
                                                 <th>Actions</th>
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            
                                             {patrimoine.possessions.map((possession, index) => (
+                                                
                                                 <tr key={index}>
                                                     <td>{possession.libelle}</td>
                                                     <td>{possession.valeurConstante !== undefined ? possession.valeurConstante + " Ar" : possession.valeur + " Ar"}</td>
                                                     <td>{new Date(possession.dateDebut).toLocaleDateString()}</td>
                                                     <td>{possession.dateFin ? new Date(possession.dateFin).toLocaleDateString() : "non spécifiée"}</td>
                                                     <td>{possession.tauxAmortissement !== null ? possession.tauxAmortissement : 0}</td>
+                                                    <td>{calculateCurrentValue(possession)} Ar</td> 
                                                     <td>
                                                         <i className="fas fa-edit text-primary mx-2" style={{ cursor: 'pointer' }} onClick={() => handleUpdate(possession)}></i>
                                                         <i className="fas fa-close text-bg-dark pe-1 rounded mx-2" style={{ cursor: 'pointer' }} onClick={() => handleClose(possession.libelle)}></i>
@@ -187,19 +213,19 @@ export default function PossessionsTable() {
                                     <form onSubmit={handleUpdateSubmit}>
                                         <div className="form-group">
                                             <label>Libelle</label>
-                                            <input type="text" className="form-control" name="libelle" value={selectedPossession.libelle || ''} onChange={handleInputChange} />
+                                            <input type="text" className="form-control" name="libelle" value={selectedPossession.libelle || ''} onChange={handleInputChange} readOnly/>
                                         </div>
                                         <div className="form-group">
-                                            <label>Nouveau Libelle</label>
-                                            <input type="text" className="form-control" name="nouveauLibelle" value={selectedPossession.nouveauLibelle || ''} onChange={handleInputChange} />
+                                            <label>Nouveau nom de libelle</label>
+                                            <input type="text" placeholder="optionnelle" className="form-control" name="nouveauLibelle" value={selectedPossession.nouveauLibelle || ''} onChange={handleInputChange} />
                                         </div>
                                         <div className="form-group">
                                             <label>Valeur</label>
-                                            <input type="number" className="form-control" name="valeur" value={selectedPossession.valeur || ''} onChange={handleInputChange} />
+                                            <input type="number" className="form-control" name="valeur" value={selectedPossession.valeur || ''} onChange={handleInputChange} readOnly/>
                                         </div>
                                         <div className="form-group">
                                             <label>Date Début</label>
-                                            <input type="date" className="form-control" name="dateDebut" value={selectedPossession.dateDebut ? selectedPossession.dateDebut.toISOString().split('T')[0] : ''} onChange={handleInputChange} />
+                                            <input type="date" className="form-control" name="dateDebut" value={selectedPossession.dateDebut ? selectedPossession.dateDebut.toISOString().split('T')[0] : ''} onChange={handleInputChange} readOnly/>
                                         </div>
                                         <div className="form-group">
                                             <label>Date Fin</label>
@@ -207,9 +233,9 @@ export default function PossessionsTable() {
                                         </div>
                                         <div className="form-group">
                                             <label>Taux d'Amortissement (%)</label>
-                                            <input type="number" className="form-control" name="tauxAmortissement" value={selectedPossession.tauxAmortissement || ''} onChange={handleInputChange} />
+                                            <input type="number" className="form-control" name="tauxAmortissement" value={selectedPossession.tauxAmortissement || ''} onChange={handleInputChange} readOnly/>
                                         </div>
-                                        <button type="submit" className="btn btn-primary">Sauvegarder</button>
+                                        <button type="submit" className="btn btn-primary mt-lg-3">Sauvegarder</button>
                                     </form>
                                 </div>
                             </div>
