@@ -3,12 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import LineChartComponent from '../chart/chart'; 
 import '../App.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
-import Argent from "../../../../models/possessions/Argent";
-import BienMateriel from "../../../../models/possessions/BienMateriel";
-import Flux from "../../../../models/possessions/Flux";
-import Patrimoine from "../../../../models/Patrimoine";
-import Personne from "../../../../models/Personne";
-import data from "../../../../data/data.json";
+import Argent from "../../../models/possessions/Argent";
+import BienMateriel from "../../../models/possessions/BienMateriel";
+import Flux from "../../../models/possessions/Flux";
+import Patrimoine from "../../../models/Patrimoine";
+import Personne from "../../../models/Personne";
+import data from "../../../../backend/data/data.json";
 
 export default function PatrimoineList() {
     const [personnes, setPersonnes] = useState([]);

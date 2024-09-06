@@ -1,0 +1,94 @@
+[
+  {
+    "model": "Patrimoine",
+    "data": {
+      "possesseur": {
+        "nom": "John Doe"
+      },
+      "possessions": [
+        {
+          "possesseur": {
+            "nom": "John Doe"
+          },
+          "libelle": "MacBook Pro",
+          "valeur": 4300000,
+          "dateDebut": "2023-12-25T00:00:00.000Z",
+          "dateFin": null,
+          "tauxAmortissement": 5
+        },
+        {
+          "possesseur": {
+            "nom": "John Doe"
+          },
+          "libelle": "Compte épargne",
+          "valeur": 500000,
+          "dateDebut": "2019-01-06T00:00:00.000Z",
+          "dateFin": null,
+          "tauxAmortissement": -5
+        },
+        {
+          "possesseur": {
+            "nom": "John Doe"
+          },
+          "libelle": "Clothes",
+          "valeur": 2000000,
+          "dateDebut": "2020-01-01T00:00:00.000Z",
+          "dateFin": null,
+          "tauxAmortissement": 10
+        },
+        {
+          "possesseur": {
+            "nom": "John Doe"
+          },
+          "libelle": "Alternance",
+          "valeur": 600000,
+          "dateDebut": "2023-02-13T00:00:00.000Z",
+          "dateFin": null,
+          "tauxAmortissement": 0,
+          "valeurConstante": 600000,
+          "jour": 1
+        },
+        {
+          "possesseur": {
+            "nom": "John Doe"
+          },
+          "libelle": "Survie",
+          "valeur": 300000,
+          "dateDebut": "2023-02-13T00:00:00.000Z",
+          "dateFin": null,
+          "tauxAmortissement": 0,
+          "valeurConstante": -300000,
+          "jour": 2
+        },
+        {
+          "possesseur": {
+            "nom": "John Doe"
+          },
+          "libelle": "Redmi Note 9 (Lost)",
+          "valeur": 800000,
+          "dateDebut": "2022-12-29T00:00:00.000Z",
+          "dateFin": "2024-09-06T17:34:44.424Z",
+          "tauxAmortissement": 15
+        },
+        {
+          "possesseur": {
+            "nom": "John Doe"
+          },
+          "libelle": "Samsung  Galaxy S23 (Gifted)",
+          "valeur": 1600000,
+          "dateDebut": "2024-09-06T00:00:00.000Z",
+          "dateFin": null,
+          "tauxAmortissement": 10,
+          "valeurConstante": null,
+          "jour": null
+        }
+      ]
+    }
+  },
+  {
+    "model": "Personne",
+    "data": {
+      "nom": "John Doe"
+    }
+  }
+]
