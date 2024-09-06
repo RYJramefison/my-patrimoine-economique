@@ -122,7 +122,9 @@ export default function PatrimoineList() {
                                 let valeurActuelle;
 
                                 if (isDateFinBeforeOrEqual) {
-                                    valeurActuelle = possession.getValeur(date);
+                                    // Get last known value before dateFin
+                                    const lastKnownDate = new Date(possession.dateFin);
+                                    valeurActuelle = possession.getValeur(lastKnownDate);
                                 } else if (isDateDebutGreaterThanSelectedDate) {
                                     valeurActuelle = 0;
                                 } else {

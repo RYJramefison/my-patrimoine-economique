@@ -150,13 +150,12 @@ export default function PossessionsTable() {
     return (
         <div className="container mt-lg-5">
             <div className="text-center mb-4">
-                <h1 className="display-4 text-center text-danger mt-4 mb-4">List des Possessions</h1>
+                <h1 className="display-4 text-center text-danger mt-4 mb-4">Liste des Possessions</h1>
             </div>
             <div className="container-flex">
                 <div className="table-container">
                     {personnes.map((personne, index) => {
                         const patrimoine = patrimoines.find(p => p.possesseur === personne.nom);
-
                         return patrimoine ? (
                             <div key={index} className="mb-5">
                                 <h3 className="mb-3">{personne.nom}</h3>

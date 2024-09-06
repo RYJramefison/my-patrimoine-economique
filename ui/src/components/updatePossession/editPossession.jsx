@@ -29,10 +29,10 @@ const EditPossession = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
+    setFormData(prevData => ({
+      ...prevData,
       [name]: value
-    });
+    }));
   };
 
   const handleSubmit = (e) => {
@@ -40,7 +40,7 @@ const EditPossession = () => {
     axios.put(`/api/possessions/${libelle}`, formData)
       .then(response => {
         console.log('Possession mise à jour:', response.data);
-        navigate('/'); 
+        navigate('/');
       })
       .catch(error => {
         console.error('Erreur lors de la mise à jour de la possession:', error);
@@ -100,7 +100,7 @@ const EditPossession = () => {
             id="dateFin"
             name="dateFin"
             className="form-control"
-            value={formData.dateFin}
+            value={formData.dateFin || ''}
             onChange={handleChange}
           />
         </div>
@@ -138,7 +138,6 @@ const EditPossession = () => {
             className="form-control"
             value={formData.jour}
             onChange={handleChange}
-            
           />
         </div>
 
