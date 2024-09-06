@@ -8,7 +8,7 @@ import Possession from '../models/possessions/Possession.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const dataFilePath = path.join(__dirname, '../data/data.json');
+const dataFilePath = path.join(__dirname, './data/data.json');
 
 const loadData = () => {
   try {
