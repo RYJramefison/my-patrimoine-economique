@@ -64,10 +64,10 @@
           "possesseur": {
             "nom": "John Doe"
           },
-          "libelle": "Redmi Note 9",
+          "libelle": "compte epargne lost",
           "valeur": 800000,
           "dateDebut": "2022-12-29T00:00:00.000Z",
-          "dateFin": "2024-09-06T13:30:52.619Z",
+          "dateFin": null,
           "tauxAmortissement": 15
         }
       ]
