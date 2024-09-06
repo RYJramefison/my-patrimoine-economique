@@ -3,8 +3,8 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import cors from 'cors';
-import Patrimoine from '../models/Patrimoine.js';
-import Possession from '../models/possessions/Possession.js';
+import Patrimoine from '../ui/models/Patrimoine.js';
+import Possession from '../ui/models/possessions/Possession.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
