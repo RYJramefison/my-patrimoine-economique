@@ -66,19 +66,29 @@ export default function PossessionsTable() {
     const handleUpdateSubmit = async (e) => {
         e.preventDefault();
         try {
-            await axios.put(`https://my-patrimoine-economique-backend.onrender.com/api/possessions/${selectedPossession.libelle}`, selectedPossession);
+            // Détermine l'URL de base en fonction de l'environnement
+            const baseURL = window.location.hostname.includes('localhost')
+                ? 'http://localhost:3000'
+                : 'https://my-patrimoine-economique-backend.onrender.com';
+    
+            // Effectue la requête PUT en utilisant l'URL dynamique
+            await axios.put(`${baseURL}/api/possessions/${selectedPossession.libelle}`, selectedPossession);
+    
             setShowModal(false);
+    
             const updatedPatrimoines = patrimoines.map(patrimoine => {
                 patrimoine.possessions = patrimoine.possessions.map(pos => 
                     pos.libelle === selectedPossession.libelle ? selectedPossession : pos
                 );
                 return patrimoine;
             });
+    
             setPatrimoines(updatedPatrimoines);
         } catch (error) {
             console.error('Erreur lors de la mise à jour de la possession:', error.message);
         }
     };
+    
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -90,21 +100,38 @@ export default function PossessionsTable() {
 
     const handleDelete = async (libelle) => {
         try {
-            await axios.delete(`https://my-patrimoine-economique-backend.onrender.com/api/possessions/${libelle}`);
+            // Détermine l'URL de base en fonction de l'environnement
+            const baseURL = window.location.hostname.includes('localhost')
+                ? 'http://localhost:3000'
+                : 'https://my-patrimoine-economique-backend.onrender.com';
+    
+            // Effectue la requête DELETE en utilisant l'URL dynamique
+            await axios.delete(`${baseURL}/api/possessions/${libelle}`);
+    
             const updatedPatrimoines = patrimoines.map(patrimoine => {
                 patrimoine.possessions = patrimoine.possessions.filter(pos => pos.libelle !== libelle);
                 return patrimoine;
             });
+    
             setPatrimoines(updatedPatrimoines);
         } catch (error) {
             console.error('Erreur lors de la suppression de la possession:', error.message);
         }
     };
+    
 
     const handleClose = async (libelle) => {
         try {
             const dateFin = new Date().toISOString();
-            await axios.put(`https://my-patrimoine-economique-backend.onrender.com/api/possessions/${libelle}/close`, { dateFin });
+    
+            // Détermine l'URL de base en fonction de l'environnement
+            const baseURL = window.location.hostname.includes('localhost')
+                ? 'http://localhost:3000'
+                : 'https://my-patrimoine-economique-backend.onrender.com';
+    
+            // Effectue la requête PUT en utilisant l'URL dynamique
+            await axios.put(`${baseURL}/api/possessions/${libelle}/close`, { dateFin });
+    
             const updatedPatrimoines = patrimoines.map(patrimoine => {
                 patrimoine.possessions = patrimoine.possessions.map(pos => {
                     if (pos.libelle === libelle) {
@@ -117,11 +144,13 @@ export default function PossessionsTable() {
                 });
                 return patrimoine;
             });
+    
             setPatrimoines(updatedPatrimoines);
         } catch (error) {
             console.error('Erreur lors de la fermeture de la possession:', error.message);
         }
     };
+    
 
     const calculateCurrentValue = (possession) => {
         const now = new Date();

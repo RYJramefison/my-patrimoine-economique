@@ -43,13 +43,18 @@ const AddPossessionForm = () => {
     }
 
     try {
-      const response = await fetch('https://my-patrimoine-economique-backend.onrender.com/api/possessions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
+      const baseURL = window.location.hostname.includes('localhost')
+    ? 'http://localhost:3000'
+    : 'https://my-patrimoine-economique-backend.onrender.com';
+
+const response = await fetch(`${baseURL}/api/possessions`, {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(formData),
+});
+
 
       if (response.ok) {
         setSuccess('Possession ajoutée avec succès');
@@ -89,7 +94,6 @@ const AddPossessionForm = () => {
     <Container className="my-4">
       <div className='card-link card-body'>
         <h2 className="mb-4">Créer une Possession</h2>
-        {error && <Alert variant="danger">{error}</Alert>}
         <Form onSubmit={handleSubmit}>
           <Row className="mb-3">
             <Col md={6}>
@@ -201,6 +205,7 @@ const AddPossessionForm = () => {
           <Button variant="primary" type="submit">Ajouter la Possession</Button>
         </Form>
         {success && <Alert variant="success" className="mt-4">{success}</Alert>}
+        {error && <Alert variant="danger">{error}</Alert>}
       </div>
       <div>
         <PossessionsTable/>

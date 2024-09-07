@@ -17,15 +17,22 @@ const EditPossession = () => {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    axios.get(`/api/possessions/${libelle}`)
-      .then(response => {
-        setFormData(response.data);
-      })
-      .catch(error => {
-        console.error('Erreur lors de la récupération de la possession:', error);
-        setError('Erreur lors de la récupération de la possession.');
-      });
-  }, [libelle]);
+    // Détermine l'URL de base en fonction de l'environnement
+    const baseURL = window.location.hostname.includes('localhost')
+        ? 'http://localhost:3000'
+        : 'https://my-patrimoine-economique-backend.onrender.com';
+
+    // Effectue la requête GET en utilisant l'URL dynamique
+    axios.get(`${baseURL}/api/possessions/${libelle}`)
+        .then(response => {
+            setFormData(response.data);
+        })
+        .catch(error => {
+            console.error('Erreur lors de la récupération de la possession:', error);
+            setError('Erreur lors de la récupération de la possession.');
+        });
+}, [libelle]);
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -37,16 +44,24 @@ const EditPossession = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    axios.put(`/api/possessions/${libelle}`, formData)
-      .then(response => {
-        console.log('Possession mise à jour:', response.data);
-        navigate('/');
-      })
-      .catch(error => {
-        console.error('Erreur lors de la mise à jour de la possession:', error);
-        setError('Erreur lors de la mise à jour de la possession.');
-      });
-  };
+
+    // Détermine l'URL de base en fonction de l'environnement
+    const baseURL = window.location.hostname.includes('localhost')
+        ? 'http://localhost:3000'
+        : 'https://my-patrimoine-economique-backend.onrender.com';
+
+    // Effectue la requête PUT en utilisant l'URL dynamique
+    axios.put(`${baseURL}/api/possessions/${libelle}`, formData)
+        .then(response => {
+            console.log('Possession mise à jour:', response.data);
+            navigate('/');
+        })
+        .catch(error => {
+            console.error('Erreur lors de la mise à jour de la possession:', error);
+            setError('Erreur lors de la mise à jour de la possession.');
+        });
+};
+
 
   return (
     <div className="container mt-4">
