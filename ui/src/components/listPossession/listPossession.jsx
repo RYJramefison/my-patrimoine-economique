@@ -66,7 +66,7 @@ export default function PossessionsTable() {
     const handleUpdateSubmit = async (e) => {
         e.preventDefault();
         try {
-            await axios.put(`http://localhost:3000/api/possessions/${selectedPossession.libelle}`, selectedPossession);
+            await axios.put(`https://my-patrimoine-economique-backend.onrender.com/api/possessions/${selectedPossession.libelle}`, selectedPossession);
             setShowModal(false);
             const updatedPatrimoines = patrimoines.map(patrimoine => {
                 patrimoine.possessions = patrimoine.possessions.map(pos => 
@@ -90,7 +90,7 @@ export default function PossessionsTable() {
 
     const handleDelete = async (libelle) => {
         try {
-            await axios.delete(`http://localhost:3000/api/possessions/${libelle}`);
+            await axios.delete(`https://my-patrimoine-economique-backend.onrender.com/api/possessions/${libelle}`);
             const updatedPatrimoines = patrimoines.map(patrimoine => {
                 patrimoine.possessions = patrimoine.possessions.filter(pos => pos.libelle !== libelle);
                 return patrimoine;
@@ -104,7 +104,7 @@ export default function PossessionsTable() {
     const handleClose = async (libelle) => {
         try {
             const dateFin = new Date().toISOString();
-            await axios.put(`http://localhost:3000/api/possessions/${libelle}/close`, { dateFin });
+            await axios.put(`https://my-patrimoine-economique-backend.onrender.com/api/possessions/${libelle}/close`, { dateFin });
             const updatedPatrimoines = patrimoines.map(patrimoine => {
                 patrimoine.possessions = patrimoine.possessions.map(pos => {
                     if (pos.libelle === libelle) {

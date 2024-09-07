@@ -43,7 +43,7 @@ const AddPossessionForm = () => {
     }
 
     try {
-      const response = await fetch('http://localhost:3000/api/possessions', {
+      const response = await fetch('https://my-patrimoine-economique-backend.onrender.com/api/possessions', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
