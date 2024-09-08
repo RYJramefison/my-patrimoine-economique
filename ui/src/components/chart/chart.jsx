@@ -24,7 +24,7 @@ Chart.register(
   Tooltip,
   Legend,
   TimeScale,
-  Filler 
+  Filler
 );
 
 function LineChartComponent({ possessions }) {
@@ -56,22 +56,40 @@ function LineChartComponent({ possessions }) {
     const labels = [];
     const values = [];
 
-    const currentDate = new Date(dateDebut);
+    const startDate = new Date(dateDebut);
     const endDate = new Date(dateFin);
 
-    while (currentDate <= endDate) {
+    // Normalisez les dates
+    const normalizedStartDate = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
+    const normalizedEndDate = new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate());
+
+    let currentDate = new Date(normalizedStartDate);
+
+    while (currentDate <= normalizedEndDate) {
+      // Calculez la valeur totale pour la date actuelle
       const valeurTotale = data.reduce((acc, possession) => {
         const possessionDateDebut = new Date(possession.dateDebut);
-        
-        if (possession.valeurConstante !== undefined && possessionDateDebut > currentDate) {
-          return acc;
-        } else {
-          return acc + (possession.getValeur(currentDate) || 0);
+        const possessionDateFin = possession.dateFin ? new Date(possession.dateFin) : null;
+
+        // Si la possession est en dehors de l'intervalle ou déjà expirée, ignorer
+        if (possessionDateFin && possessionDateFin < normalizedStartDate) {
+          return acc;  // Possession expirée avant la période affichée
         }
+
+        if (possessionDateDebut > normalizedEndDate) {
+          return acc;  // Possession commence après la période affichée
+        }
+
+        // Si la possession est en cours ou a expiré après la période affichée
+        const valeurPourDate = possessionDateFin && currentDate > possessionDateFin ? 0 : possession.getValeur(currentDate);
+        
+        return acc + (valeurPourDate || 0);
       }, 0);
 
-      labels.push(new Date(currentDate));
+      labels.push(new Date(currentDate).toISOString());
       values.push(valeurTotale);
+
+      // Passez au jour suivant
       currentDate.setDate(currentDate.getDate() + 1);
     }
 
@@ -81,7 +99,7 @@ function LineChartComponent({ possessions }) {
         {
           label: "Évolution de la valeur",
           data: values,
-          backgroundColor: "rgba(35, 135, 182, 0.2)",
+          backgroundColor: "rgba(35, 135, 182, 0.3)",
           borderColor: "rgb(35, 135, 182)",
           tension: 0.5,
           fill: true,

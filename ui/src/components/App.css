@@ -1,3 +1,10 @@
+.font-size-smaller {
+    font-size: smaller;
+}
+.container-animation {
+    animation: fadeIn 1s ease-in-out;
+}
+
 .text-center h1 {
     color: #e74c3c; 
     border-bottom: 2px solid #e74c3c; 

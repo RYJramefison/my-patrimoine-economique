@@ -4,6 +4,7 @@ import 'bootstrap/dist/js/bootstrap.bundle.min';
 import { Link, Routes, Route } from 'react-router-dom'; 
 import AddPossessionForm from '../addPossession/add'; 
 import PatrimoineList from '../listPatrimoine/patrimoineList'; 
+import Accueil from '../Accueil/Accueil';
 import './Menu.css';
 
 export default function Menu() {
@@ -32,6 +33,9 @@ export default function Menu() {
                 <div className="collapse navbar-collapse" id="navbarNav">
                     <ul className="navbar-nav ml-auto">
                         <li className="nav-item">
+                            <Link className="nav-link" to="/">Accueil</Link>
+                        </li>
+                        <li className="nav-item">
                             <Link className="nav-link" to="/add">Possession</Link>
                         </li>
                         <li className="nav-item">
@@ -45,6 +49,7 @@ export default function Menu() {
             <div className="card shadow-lg">
                 <div className="card-body">
                     <Routes>
+                        <Route  path="/" element={<Accueil />} />
                         <Route path="/add" element={<AddPossessionForm />} />
                         <Route path="/patrimoineList" element={<PatrimoineList />} />
                     </Routes>

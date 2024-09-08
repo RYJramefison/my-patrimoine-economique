@@ -76,6 +76,8 @@ app.get('/api/possessions', (req, res) => {
   }
   res.json(allPossessions);
 });
+
+
 app.get('/', (req, res) => {
   const allPossessions = [];
   for (const patrimoine of Object.values(patrimoines)) {

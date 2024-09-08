@@ -75,7 +75,26 @@ export default function PatrimoineList() {
         if (selectedPersonne) {
             const patrimoine = patrimoines.find(p => p.possesseur === selectedPersonne);
             if (patrimoine) {
-                const totalValue = patrimoine.getValeur(date);
+                // Calculez la valeur totale en tenant compte des ajustements de date
+                const totalValue = patrimoine.possessions.reduce((acc, possession) => {
+                    // Vérifiez les conditions pour la valeur actuelle
+                    const normalizedDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+                    const normalizedDateFin = possession.dateFin ? new Date(possession.dateFin.getFullYear(), possession.dateFin.getMonth(), possession.dateFin.getDate()) : null;
+                    const normalizedDateDebut = new Date(possession.dateDebut.getFullYear(), possession.dateDebut.getMonth(), possession.dateDebut.getDate());
+    
+                    let valeurActuelle;
+    
+                    if (normalizedDateFin && normalizedDateFin <= normalizedDate) {
+                        valeurActuelle = 0;
+                    } else if (normalizedDateDebut > normalizedDate) {
+                        valeurActuelle = 0;
+                    } else {
+                        valeurActuelle = possession.getValeur(date);
+                    }
+    
+                    return acc + valeurActuelle;
+                }, 0);
+    
                 setValeurPatrimoine(totalValue.toFixed(2));
                 setShowChart(true);
             } else {
@@ -84,6 +103,7 @@ export default function PatrimoineList() {
             }
         }
     };
+    
 
     const patrimoine = patrimoines.find(p => p.possesseur === selectedPersonne);
 
@@ -115,33 +135,48 @@ export default function PatrimoineList() {
                             </tr>
                         </thead>
                         <tbody>
-                            {patrimoine.possessions.map((possession, index) => {
-                                const isDateFinBeforeOrEqual = possession.dateFin && possession.dateFin <= date;
-                                const isDateDebutGreaterThanSelectedDate = possession.dateDebut > date;
-                                
-                                let valeurActuelle;
+                        {patrimoine.possessions.map((possession, index) => {
+    // Normalisez les dates pour la comparaison en supprimant l'heure, les minutes et les secondes
+    const normalizeDate = (date) => {
+        return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    };
 
-                                if (isDateFinBeforeOrEqual) {
-                                    // Get last known value before dateFin
-                                    const lastKnownDate = new Date(possession.dateFin);
-                                    valeurActuelle = possession.getValeur(lastKnownDate);
-                                } else if (isDateDebutGreaterThanSelectedDate) {
-                                    valeurActuelle = 0;
-                                } else {
-                                    valeurActuelle = possession.getValeur(date);
-                                }
+    // Obtenez les dates normalisées
+    const normalizedDate = normalizeDate(date);
+    const normalizedDateFin = possession.dateFin ? normalizeDate(possession.dateFin) : null;
+    const normalizedDateDebut = normalizeDate(possession.dateDebut);
 
-                                return (
-                                    <tr key={index}>
-                                        <td>{possession.libelle}</td>
-                                        <td>{possession.valeurConstante !== undefined ? possession.valeurConstante + " Ar" : possession.valeur + " Ar"}</td>
-                                        <td>{new Date(possession.dateDebut).toLocaleDateString()}</td>
-                                        <td>{possession.dateFin ? new Date(possession.dateFin).toLocaleDateString() : "non spécifiée"}</td>
-                                        <td>{possession.tauxAmortissement !== null ? possession.tauxAmortissement : 0}</td>
-                                        <td>{valeurActuelle.toFixed(2)} Ar</td>
-                                    </tr>
-                                );
-                            })}
+    // Vérifiez si la date de fin est définie et si elle est passée ou égale à la date actuelle
+    const isDateFinExpired = normalizedDateFin && normalizedDateFin <= normalizedDate;
+    // Vérifiez si la date de début est après la date actuelle
+    const isDateDebutAfter = normalizedDateDebut > normalizedDate;
+
+    let valeurActuelle;
+
+    if (isDateFinExpired) {
+        // Si la date de fin est passée ou égale à la date actuelle, la valeur actuelle est 0
+        valeurActuelle = 0;
+    } else if (isDateDebutAfter) {
+        // Si la date de début est après la date actuelle, la valeur actuelle est 0
+        valeurActuelle = 0;
+    } else {
+        // Sinon, calculez la valeur actuelle en fonction de la date actuelle
+        valeurActuelle = possession.getValeur(date);
+    }
+
+    return (
+        <tr key={index}>
+            <td>{possession.libelle}</td>
+            <td>{possession.valeurConstante !== undefined ? possession.valeurConstante + " Ar" : possession.valeur + " Ar"}</td>
+            <td>{new Date(possession.dateDebut).toLocaleDateString()}</td>
+            <td>{possession.dateFin ? new Date(possession.dateFin).toLocaleDateString() : "non spécifiée"}</td>
+            <td>{possession.tauxAmortissement !== null ? possession.tauxAmortissement : 0}</td>
+            <td>{valeurActuelle.toFixed(2)} Ar</td>
+        </tr>
+    );
+})}
+
+
                         </tbody>
                     </table>
                 </div>

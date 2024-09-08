@@ -157,6 +157,11 @@ export default function PossessionsTable() {
         const start = new Date(possession.dateDebut);
         const end = possession.dateFin ? new Date(possession.dateFin) : now;
     
+        // Si la date de fin est passée ou égale à la date actuelle, la valeur actuelle devient 0
+        if ( possession.dateFin != null && possession.dateFin <= now) {
+            return '0.00';
+        }
+    
         if (possession.valeurConstante != null) {
             const months = (end.getFullYear() - start.getFullYear()) * 12 + end.getMonth() - start.getMonth();
             const value = possession.valeur * Math.max(months, 0);
@@ -170,6 +175,7 @@ export default function PossessionsTable() {
         return value.toFixed(2);
     };
     
+    
 
     
     
@@ -177,7 +183,7 @@ export default function PossessionsTable() {
     
 
     return (
-        <div className="container mt-lg-5">
+        <div className="container mt-lg-5 container-animation">
             <div className="text-center mb-4">
                 <h1 className="display-4 text-center text-danger mt-4 mb-4">Liste des Possessions</h1>
             </div>
@@ -201,17 +207,17 @@ export default function PossessionsTable() {
                                                 <th>Actions</th>
                                             </tr>
                                         </thead>
-                                        <tbody>
+                                        <tbody >
                                             
                                             {patrimoine.possessions.map((possession, index) => (
                                                 
                                                 <tr key={index}>
-                                                    <td>{possession.libelle}</td>
-                                                    <td>{possession.valeurConstante !== undefined ? possession.valeurConstante + " Ar" : possession.valeur + " Ar"}</td>
-                                                    <td>{new Date(possession.dateDebut).toLocaleDateString()}</td>
-                                                    <td>{possession.dateFin ? new Date(possession.dateFin).toLocaleDateString() : "non spécifiée"}</td>
-                                                    <td>{possession.tauxAmortissement !== null ? possession.tauxAmortissement : 0}</td>
-                                                    <td>{calculateCurrentValue(possession)} Ar</td> 
+                                                    <td className="font-size-smaller">{possession.libelle}</td>
+                                                    <td className="font-size-smaller">{possession.valeurConstante !== undefined ? possession.valeurConstante + " Ar" : possession.valeur + " Ar"}</td>
+                                                    <td className="font-size-smaller">{new Date(possession.dateDebut).toLocaleDateString()}</td>
+                                                    <td className="font-size-smaller">{possession.dateFin ? new Date(possession.dateFin).toLocaleDateString() : "non spécifiée"}</td>
+                                                    <td className="font-size-smaller">{possession.tauxAmortissement !== null ? possession.tauxAmortissement : 0}</td>
+                                                    <td className="font-size-smaller">{calculateCurrentValue(possession)} Ar</td>
                                                     <td>
                                                         <i className="fas fa-edit text-primary mx-2" style={{ cursor: 'pointer' }} onClick={() => handleUpdate(possession)}></i>
                                                         <i className="fas fa-close text-bg-dark pe-1 rounded mx-2" style={{ cursor: 'pointer' }} onClick={() => handleClose(possession.libelle)}></i>
