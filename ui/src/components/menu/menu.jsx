@@ -27,11 +27,11 @@ export default function Menu() {
 
             <nav className="navbar navbar-expand-lg navbar-dark bg-dark mb-4 navbar-custom position-sticky top-1 maxIndex">
                 <a className="navbar-brand" href="#">Patrimoine Économique</a>
-                <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span className="navbar-toggler-icon"></span>
                 </button>
                 <div className="collapse navbar-collapse" id="navbarNav">
-                    <ul className="navbar-nav ml-auto">
+                    <ul className="navbar-nav">
                         <li className="nav-item">
                             <Link className="nav-link" to="/">Accueil</Link>
                         </li>
@@ -41,7 +41,6 @@ export default function Menu() {
                         <li className="nav-item">
                             <Link className="nav-link" to="/patrimoineList">Patrimoine</Link>
                         </li>
-                        
                     </ul>
                 </div>
             </nav>
@@ -49,7 +48,7 @@ export default function Menu() {
             <div className="card shadow-lg">
                 <div className="card-body">
                     <Routes>
-                        <Route  path="/" element={<Accueil />} />
+                        <Route path="/" element={<Accueil />} />
                         <Route path="/add" element={<AddPossessionForm />} />
                         <Route path="/patrimoineList" element={<PatrimoineList />} />
                     </Routes>

@@ -124,12 +124,10 @@ export default function PossessionsTable() {
         try {
             const dateFin = new Date().toISOString();
     
-            // Détermine l'URL de base en fonction de l'environnement
             const baseURL = window.location.hostname.includes('localhost')
                 ? 'http://localhost:3000'
                 : 'https://my-patrimoine-economique-backend.onrender.com';
     
-            // Effectue la requête PUT en utilisant l'URL dynamique
             await axios.put(`${baseURL}/api/possessions/${libelle}/close`, { dateFin });
     
             const updatedPatrimoines = patrimoines.map(patrimoine => {
@@ -157,7 +155,6 @@ export default function PossessionsTable() {
         const start = new Date(possession.dateDebut);
         const end = possession.dateFin ? new Date(possession.dateFin) : now;
     
-        // Si la date de fin est passée ou égale à la date actuelle, la valeur actuelle devient 0
         if ( possession.dateFin != null && possession.dateFin <= now) {
             return '0.00';
         }
