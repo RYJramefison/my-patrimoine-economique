@@ -66,12 +66,10 @@ export default function PossessionsTable() {
     const handleUpdateSubmit = async (e) => {
         e.preventDefault();
         try {
-            // Détermine l'URL de base en fonction de l'environnement
             const baseURL = window.location.hostname.includes('localhost')
                 ? 'http://localhost:3000'
                 : 'https://my-patrimoine-economique-backend.onrender.com';
     
-            // Effectue la requête PUT en utilisant l'URL dynamique
             await axios.put(`${baseURL}/api/possessions/${selectedPossession.libelle}`, selectedPossession);
     
             setShowModal(false);
@@ -100,12 +98,10 @@ export default function PossessionsTable() {
 
     const handleDelete = async (libelle) => {
         try {
-            // Détermine l'URL de base en fonction de l'environnement
             const baseURL = window.location.hostname.includes('localhost')
                 ? 'http://localhost:3000'
                 : 'https://my-patrimoine-economique-backend.onrender.com';
     
-            // Effectue la requête DELETE en utilisant l'URL dynamique
             await axios.delete(`${baseURL}/api/possessions/${libelle}`);
     
             const updatedPatrimoines = patrimoines.map(patrimoine => {

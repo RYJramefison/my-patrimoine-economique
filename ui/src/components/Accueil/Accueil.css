@@ -1,11 +1,11 @@
 
 .accueil-container {
-    height: 80vh; /* Réduction de la hauteur */
-    background: linear-gradient(135deg, #ffffff, #f5f5f5); /* Dégradé bleu à vert */
+    height: 80vh; 
+    background: linear-gradient(135deg, #ffffff, #f5f5f5); 
     animation: fadeIn 1s ease-in-out;
 }
 
-/* Style du titre avec une couleur et taille moderne */
+
 .animated-title {
     font-size: 2.5rem;
     color: #333;
@@ -13,7 +13,6 @@
     animation: fadeIn 2s ease-in-out;
 }
 
-/* Style pour les descriptions avec un espacement et une couleur agréables */
 .animated-description {
     font-size: 1.1rem;
     color: #666;
@@ -21,7 +20,6 @@
     opacity: 0;
 }
 
-/* Boutons avec transition et effet de hover */
 .animated-button {
     transition: transform 0.3s, background-color 0.3s, box-shadow 0.3s;
     border-radius: 8px;
@@ -32,7 +30,6 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-/* Keyframes pour les animations */
 @keyframes fadeIn {
     from {
         opacity: 0;
