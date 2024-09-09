@@ -98,6 +98,35 @@ export default function PatrimoineList() {
             setShowChart(false);
         }
     };
+    const handleApplyClick = () => {
+        if (selectedPersonne) {
+            const patrimoine = patrimoines.find(p => p.possesseur === selectedPersonne);
+            if (patrimoine) {
+                const totalValue = patrimoine.possessions.reduce((acc, possession) => {
+                    const normalizedDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+                    const normalizedDateFin = possession.dateFin ? new Date(possession.dateFin.getFullYear(), possession.dateFin.getMonth(), possession.dateFin.getDate()) : null;
+                    const normalizedDateDebut = new Date(possession.dateDebut.getFullYear(), possession.dateDebut.getMonth(), possession.dateDebut.getDate());
+    
+                    let valeurActuelle;
+    
+                    if (normalizedDateFin && normalizedDateFin <= normalizedDate) {
+                        valeurActuelle = 0;
+                    } else if (normalizedDateDebut > normalizedDate) {
+                        valeurActuelle = 0;
+                    } else {
+                        valeurActuelle = possession.getValeur(date);
+                    }
+    
+                    return acc + valeurActuelle;
+                }, 0);
+    
+                setValeurPatrimoine(totalValue.toFixed(2));
+            } else {
+                setValeurPatrimoine(0);
+            }
+        }
+    };
+    
 
     const handleDateChange = (e) => {
         setDate(new Date(e.target.value));
@@ -175,6 +204,8 @@ export default function PatrimoineList() {
                 <input id="datePicker" type="date" className="form-control" onChange={handleDateChange} />
             </div>
             <div className="text-center">
+            <button className="btn btn-dark" onClick={handleApplyClick}>Appliquer</button>
+
                 <p className="mt-4 text-secondary">Valeur totale du patrimoine : {valeurPatrimoine} Ar</p>
             </div>
             
