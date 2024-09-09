@@ -65,15 +65,9 @@ export default function PatrimoineList() {
     const handlePersonneChange = (e) => {
         const selected = e.target.value;
         setSelectedPersonne(selected);
-    };
-
-    const handleDateChange = (e) => {
-        setDate(new Date(e.target.value));
-    };
-
-    const handleApplyClick = () => {
-        if (selectedPersonne) {
-            const patrimoine = patrimoines.find(p => p.possesseur === selectedPersonne);
+        
+        if (selected) {
+            const patrimoine = patrimoines.find(p => p.possesseur === selected);
             if (patrimoine) {
                 const totalValue = patrimoine.possessions.reduce((acc, possession) => {
                     const normalizedDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
@@ -99,9 +93,15 @@ export default function PatrimoineList() {
                 setValeurPatrimoine(0);
                 setShowChart(false);
             }
+        } else {
+            setValeurPatrimoine(0);
+            setShowChart(false);
         }
     };
-    
+
+    const handleDateChange = (e) => {
+        setDate(new Date(e.target.value));
+    };
 
     const patrimoine = patrimoines.find(p => p.possesseur === selectedPersonne);
 
@@ -166,8 +166,6 @@ export default function PatrimoineList() {
         </tr>
     );
 })}
-
-
                         </tbody>
                     </table>
                 </div>
@@ -177,7 +175,6 @@ export default function PatrimoineList() {
                 <input id="datePicker" type="date" className="form-control" onChange={handleDateChange} />
             </div>
             <div className="text-center">
-                <button className="btn btn-dark" onClick={handleApplyClick}>Appliquer</button>
                 <p className="mt-4 text-secondary">Valeur totale du patrimoine : {valeurPatrimoine} Ar</p>
             </div>
             
